@@ -1,22 +1,24 @@
 package com.jalinyiel.petrichor.cmd;
 
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.stereotype.Component;
+import picocli.CommandLine.*;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.concurrent.Callable;
 
-@ShellComponent
-public class DemoCommand {
-    @ShellMethod("print")
-    public String print(String test, @ShellOption(value = "-str", help = "somebody") String... str) {
-        String res = Arrays.stream(str).collect(Collectors.joining());
-        return String.format("hello,%s,%s",test,res);
-    }
 
-    @ShellMethod("add")
-    public int add(int a, int b) {
-        return a+b;
+@Component
+@Command(name = "demoCommand")
+public class DemoCommand implements Callable<Integer> {
+
+    @Parameters
+    String str;
+
+    @Option(names = {"-h", "--help"}, usageHelp = true, description = "display this help message.")
+    private boolean helpRequested = false;
+
+    @Override
+    public Integer call() {
+        System.out.println(String.format(String.format("hello,%s", str)));
+        return 33;
     }
 }

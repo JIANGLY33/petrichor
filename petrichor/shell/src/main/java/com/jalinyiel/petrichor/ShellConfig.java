@@ -1,3 +1,4 @@
+/*
 package com.jalinyiel.petrichor;
 
 
@@ -16,3 +17,4 @@ public class ShellConfig {
                 AttributedStyle.DEFAULT.foreground(AttributedStyle.BLUE));
     }
 }
+*/

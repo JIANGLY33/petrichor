@@ -28,4 +28,6 @@ public class PetrichorDict  {
            return petrichorString.getValue().equals(key);
         }).map(Map.Entry::getValue).findAny();
     }
+
+    public int size() { return dict.size(); }
 }

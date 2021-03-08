@@ -1,10 +1,17 @@
 package com.jalinyiel.petrichor.cmd;
 
+import com.jalinyiel.petrichor.core.TestObject;
+import com.jalinyiel.petrichor.core.handler.ListHandler;
+import com.jalinyiel.petrichor.core.task.SupportedOperation;
+import com.jalinyiel.petrichor.core.task.TaskType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import picocli.CommandLine.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +52,7 @@ public class CommandRunner implements CommandLineRunner, ExitCodeGenerator {
             // 用String.split方法分离参数列表，分隔符为空格和制表符\t
             String[] arguments = line.split("(( +)|(\t+))+");
             // 执行命令
+            cmd.setExecutionStrategy(new CommandLine.RunLast());
             cmd.execute(arguments);
 
             // 每行命令执行结束后暂停100毫秒，以免出现输入输出混乱
@@ -61,5 +69,22 @@ public class CommandRunner implements CommandLineRunner, ExitCodeGenerator {
     @Override
     public int getExitCode() {
         return exitCode;
+    }
+
+    public static void main(String[] args) {
+        Class[] c = {String[].class};
+        Method m = null;
+        try {
+            TestObject to = new TestObject();
+            m = to.getClass().getMethod("testPrint", c);
+            Object params = new String[]{"hello","world"};
+            m.invoke(to,params);
+        } catch (NoSuchMethodException noSuchMethodException) {
+            noSuchMethodException.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 }

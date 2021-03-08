@@ -5,7 +5,6 @@ import com.jalinyiel.petrichor.core.ResponseResult;
 import com.jalinyiel.petrichor.core.handler.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -59,7 +58,8 @@ public class TaskListener implements PetrichorListener<ResponseResult>{
                 //TODO 处理方法不存在的情况
             }
             Method method = methodOptional.get();
-            Optional.ofNullable(method.invoke(petrichorTask.getParams()));
+            Object[] params = petrichorTask.getParams();
+            Optional.ofNullable(method.invoke(listHandler, petrichorTask.getParams()));
         } catch (NoSuchMethodException noSuchMethodException) {
 
         } catch (IllegalAccessException e) {

@@ -19,8 +19,9 @@ public class PetrichorList implements PetrichorValue {
         this.value = value;
     }
 
-    public void rightPush(String... values) {
+    public void rightPush(String[] values) {
         Arrays.stream(values).forEach(value::addLast);
+        System.out.println(value.size());
     }
 
     public void leftPush(String... values) {
@@ -32,6 +33,7 @@ public class PetrichorList implements PetrichorValue {
     }
 
     public Integer size() {
+        System.out.println(value.size());
         return value.size();
     }
 

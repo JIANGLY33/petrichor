@@ -59,15 +59,17 @@ public class TaskListener implements PetrichorListener<ResponseResult>{
             }
             Method method = methodOptional.get();
             Object[] params = petrichorTask.getParams();
-            Optional.ofNullable(method.invoke(listHandler, petrichorTask.getParams()));
+            ResponseResult res = (ResponseResult) method.invoke(listHandler, petrichorTask.getParams());
+            return responseResultOptional.orElse(ResponseResult.successResult(CommonResultCode.SUCCESS,res.getData()));
         } catch (NoSuchMethodException noSuchMethodException) {
 
         } catch (IllegalAccessException e) {
 
         } catch (InvocationTargetException e) {
+
         }
 
-        return responseResultOptional.orElse(ResponseResult.failedResult(CommonResultCode.EXCEPTION));
+        return ResponseResult.failedResult(CommonResultCode.EXCEPTION);
     }
 
 }

@@ -25,8 +25,17 @@ public class ListHandler implements ListOps {
 
     @Override
     public ResponseResult<Void> rightPush(String key, String... values) {
-        PetrichorList petrichorList = getValue(key);
-        petrichorList.rightPush(values);
+        if (!keyExist(key)) {
+            PetrichorList value = new PetrichorList();
+            value.rightPush(values);
+            PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+            PetrichorDict dict = petrichorDb.getKeyValues();
+            dict.put(PetrichorObjectFactory.of(keyType,keyEncoding,new PetrichorString(key)),
+                    PetrichorObjectFactory.of(valueType,valueEncoding,value));
+        } else {
+            PetrichorList petrichorList = getValue(key);
+            petrichorList.rightPush(values);
+        }
         return ResponseResult.successResult(CommonResultCode.SUCCESS);
     }
 
@@ -85,5 +94,11 @@ public class ListHandler implements ListOps {
         }
         PetrichorList petrichorList = (PetrichorList) petrichorValue.get().getPetrichorValue();
         return petrichorList;
+    }
+
+    private boolean keyExist(String key) {
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        PetrichorDict dict = petrichorDb.getKeyValues();
+        return dict.exist(key);
     }
 }

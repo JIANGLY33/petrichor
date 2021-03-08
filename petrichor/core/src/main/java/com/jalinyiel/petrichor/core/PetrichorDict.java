@@ -29,5 +29,16 @@ public class PetrichorDict  {
         }).map(Map.Entry::getValue).findAny();
     }
 
+    public boolean exist(String key) {
+        return this.dict.entrySet().stream().anyMatch(entry -> {
+            PetrichorString petrichorString = (PetrichorString)entry.getKey().getPetrichorValue();
+            return petrichorString.getValue().equals(key);
+        });
+    }
+
+    public PetrichorObject put(PetrichorObject key, PetrichorObject value) {
+        return dict.put(key, value);
+    }
+
     public int size() { return dict.size(); }
 }

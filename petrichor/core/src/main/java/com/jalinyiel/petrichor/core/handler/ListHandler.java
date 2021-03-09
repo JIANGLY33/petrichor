@@ -4,13 +4,15 @@ import com.jalinyiel.petrichor.core.*;
 import com.jalinyiel.petrichor.core.collect.PetrichorList;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.ops.ListOps;
+import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-public class ListHandler implements ListOps {
+@DataType(type = TaskType.LIST_TASK)
+public class ListHandler extends PetrichorHandler implements ListOps{
 
     @Autowired
     PetrichorContext petrichorContext;

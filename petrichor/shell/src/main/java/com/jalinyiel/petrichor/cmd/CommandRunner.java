@@ -1,10 +1,6 @@
 package com.jalinyiel.petrichor.cmd;
 
 import com.jalinyiel.petrichor.core.TestObject;
-import com.jalinyiel.petrichor.core.handler.ListHandler;
-import com.jalinyiel.petrichor.core.task.SupportedOperation;
-import com.jalinyiel.petrichor.core.task.TaskType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.stereotype.Component;
@@ -20,20 +16,20 @@ public class CommandRunner implements CommandLineRunner, ExitCodeGenerator {
 
     private final IFactory factory; // auto-configured to inject PicocliSpringFactory
 
-    private DemoCommand demoCommand;
+    private RootCommand rootCommand;
 
     private int exitCode;
 
     private final String reminder = "petrichor:> ";
 
-    public CommandRunner(DemoCommand demoCommand, IFactory factory) {
-        this.demoCommand = demoCommand;
+    public CommandRunner(RootCommand rootCommand, IFactory factory) {
+        this.rootCommand = rootCommand;
         this.factory = factory;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        CommandLine cmd = new CommandLine(demoCommand,factory);
+        CommandLine cmd = new CommandLine(rootCommand,factory);
         // 指定运行策略：只运行最后一个命令
         cmd.setExecutionStrategy(new CommandLine.RunLast());
         cmd.execute("-h");

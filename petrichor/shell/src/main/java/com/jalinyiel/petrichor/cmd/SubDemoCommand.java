@@ -12,7 +12,7 @@ public class SubDemoCommand implements Callable<Integer> {
 
     @Autowired
     @ParentCommand
-    DemoCommand demoCommand;
+    RootCommand rootCommand;
 
     @Parameters(index = "0")
     int a;

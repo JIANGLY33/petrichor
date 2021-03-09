@@ -8,19 +8,13 @@ import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.*;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
 
 @Component
-@Command(name = "listCommand", subcommands = {
+@Command(name = "list", description = "[operation list type data]", mixinStandardHelpOptions = true, subcommands = {
         ListCommand.RPush.class, ListCommand.LLength.class
 })
-public class ListCommand  {
+public class ListCommand {
 
     @Component
     @Command(name = "rpush", mixinStandardHelpOptions = true,
@@ -30,23 +24,20 @@ public class ListCommand  {
         @Autowired
         TaskListener taskListener;
 
-        @Option(names = "-k", description = "key")
+        @Parameters(index = "0", description = "key")
         private String key;
 
-        @Option(names = "-v", arity = "1..*", description = "values")
+        @Parameters(index = "1..*", arity = "1..*", description = "values")
         private String[] values;
 
         @Override
         public Integer call() {
             Class[] paramClasses = {String.class, String[].class};
-//            List<String> paramList = new LinkedList<>(asList(key));
-//            List<String> valueList = Arrays.stream(values).collect(Collectors.toList());
-//            paramList.addAll(valueList);
-//            Object params = paramList.toArray();
-            Object[] params = {key,values};
+            Object[] params = {key, values};
             ResponseResult responseResult =
                     taskListener.process(
                             PetrichorTask.of(SupportedOperation.RIGHT_PUSH.getOpsName(), params, paramClasses, TaskType.LIST_TASK));
+            System.out.println(responseResult.isSuccess() ? "OK" : responseResult.getMsg());
             return 33;
         }
     }

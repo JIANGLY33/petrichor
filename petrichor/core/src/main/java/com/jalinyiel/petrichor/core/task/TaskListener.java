@@ -1,31 +1,22 @@
 package com.jalinyiel.petrichor.core.task;
 
 import com.jalinyiel.petrichor.core.CommonResultCode;
+import com.jalinyiel.petrichor.core.PetrichorHandlerFactory;
 import com.jalinyiel.petrichor.core.ResponseResult;
 import com.jalinyiel.petrichor.core.handler.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class TaskListener implements PetrichorListener<ResponseResult>{
 
     @Autowired
-    GlobalHandler globalHandler;
-
-    @Autowired
-    ListHandler listHandler;
-
-    @Autowired
-    StringHandler stringHandler;
-
-    @Autowired
-    SetHandler setHandler;
-
-    @Autowired
-    MapHandler mapHandler;
+    PetrichorHandlerFactory petrichorHandlerFactory;
 
     @Override
     public ResponseResult process(PetrichorTask petrichorTask) {
@@ -34,42 +25,35 @@ public class TaskListener implements PetrichorListener<ResponseResult>{
         try {
             switch (petrichorTask.getType()) {
                 case MAP_TASK:
-                    methodOptional = Optional.ofNullable(mapHandler.getClass()
+                    methodOptional = Optional.ofNullable(MapHandler.class
                             .getMethod(petrichorTask.getMethodName(),petrichorTask.getParamClass()));
                     break;
                 case SET_TASK:
-                    methodOptional = Optional.ofNullable(setHandler.getClass()
+                    methodOptional = Optional.ofNullable(SetHandler.class
                             .getMethod(petrichorTask.getMethodName(),petrichorTask.getParamClass()));
                     break;
                 case LIST_TASK:
-                    methodOptional = Optional.ofNullable(listHandler.getClass()
+                    methodOptional = Optional.ofNullable(ListHandler.class
                             .getMethod(petrichorTask.getMethodName(),petrichorTask.getParamClass()));
                     break;
                 case GLOBAL_TASK:
-                    methodOptional = Optional.ofNullable(globalHandler.getClass()
+                    methodOptional = Optional.ofNullable(GlobalHandler.class
                             .getMethod(petrichorTask.getMethodName(),petrichorTask.getParamClass()));
                     break;
                 case STRING_TASK:
-                    methodOptional = Optional.ofNullable(stringHandler.getClass()
+                    methodOptional = Optional.ofNullable(StringHandler.class
                             .getMethod(petrichorTask.getMethodName(),petrichorTask.getParamClass()));
                     break;
             }
-            if (!methodOptional.isPresent()) {
-                //TODO 处理方法不存在的情况
-            }
             Method method = methodOptional.get();
             Object[] params = petrichorTask.getParams();
-            ResponseResult res = (ResponseResult) method.invoke(listHandler, petrichorTask.getParams());
+            PetrichorHandler handler = petrichorHandlerFactory.of(petrichorTask.getType());
+            ResponseResult res = (ResponseResult) method.invoke(handler, petrichorTask.getParams());
             return responseResultOptional.orElse(ResponseResult.successResult(CommonResultCode.SUCCESS,res.getData()));
-        } catch (NoSuchMethodException noSuchMethodException) {
-
-        } catch (IllegalAccessException e) {
-
-        } catch (InvocationTargetException e) {
-
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            log.error("TaskListener process exception|",e);
+            return ResponseResult.failedResult(CommonResultCode.EXCEPTION,"invalid command!");
         }
-
-        return ResponseResult.failedResult(CommonResultCode.EXCEPTION);
     }
 
 }

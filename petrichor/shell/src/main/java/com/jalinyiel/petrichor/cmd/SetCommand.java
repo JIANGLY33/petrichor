@@ -124,7 +124,7 @@ public class SetCommand {
     }
 
     @Component
-    @Command(name = "intersect", mixinStandardHelpOptions = true,
+    @Command(name = "inter", mixinStandardHelpOptions = true,
             exitCodeOnExecutionException = 34, description = "intersect sets")
     static class Intersect implements Callable<Integer> {
 
@@ -170,7 +170,7 @@ public class SetCommand {
     }
 
     @Component
-    @Command(name = "complementary", mixinStandardHelpOptions = true,
+    @Command(name = "comple", mixinStandardHelpOptions = true,
             exitCodeOnExecutionException = 34, description = "complementary sets")
     static class Complementary implements Callable<Integer> {
 

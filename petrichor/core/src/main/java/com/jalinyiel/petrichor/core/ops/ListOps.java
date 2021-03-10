@@ -14,7 +14,7 @@ public interface ListOps {
 
     ResponseResult<String> listIndex(String key, int index);
 
-    ResponseResult<List<String>> listRange(String key, int start, int end);
+    ResponseResult<String> listRange(String key, int start, int end);
 
     ResponseResult<Integer> listLength(String key);
 
@@ -22,7 +22,8 @@ public interface ListOps {
 
     ResponseResult<String> rightPop(String key);
 
-    ResponseResult<String> listSetByIndex(String key, int index, String value);
+    ResponseResult<String> listSet(String key, int index, String value);
 
-    ResponseResult<Integer> listTrim(String key, int start, int end);
+    ResponseResult<String> listTrim(String key, int start, int end);
+
 }

@@ -14,7 +14,7 @@ public interface MapOps {
 
     ResponseResult<String> mapDelete(String key, String field);
 
-    ResponseResult<Integer> mapLength(String key);
+    ResponseResult<Integer> mapSize(String key);
 
     ResponseResult<Set<String>> mapKeys(String key);
 

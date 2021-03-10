@@ -1,11 +1,26 @@
 package com.jalinyiel.petrichor.core.handler;
 
-import com.jalinyiel.petrichor.core.ResponseResult;
+import com.jalinyiel.petrichor.core.*;
+import com.jalinyiel.petrichor.core.collect.PetrichorSet;
 import com.jalinyiel.petrichor.core.ops.SetOps;
+import com.jalinyiel.petrichor.core.task.TaskType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetHandler implements SetOps {
+@DataType(type = TaskType.SET_TASK)
+public class SetHandler extends PetrichorHandler implements SetOps {
+
+    @Autowired
+    PetrichorContext petrichorContext;
+
+    @Autowired
+    ContextUtil<PetrichorSet> contextUtil;
+
+    private final ObjectType VALUE_TYPE = ObjectType.PETRICHOR_SET;
+
+    private final ObjectEncoding VALUE_ENCODING = ObjectEncoding.HASH_SET;
+
     @Override
     public ResponseResult<Void> setAdd(String key, String... elements) {
         return null;

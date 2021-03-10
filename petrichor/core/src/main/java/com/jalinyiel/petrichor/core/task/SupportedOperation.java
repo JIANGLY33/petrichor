@@ -4,10 +4,44 @@ public enum SupportedOperation {
 
     /** 全局命令 **/
     DELETE_KEY("delete"),
+    KEY_EXIST("exist"),
+    EXPIRE_KEY("expire"),
+    TYPE_KEY("type"),
+
+    /** String类型的命令 **/
+    SET("set"),
+    GET("get"),
+    SET_SECONDS_EXPIRE("setWithSecondsExpire"),
+    SET_MILE_SECONDS_EXPIRE("setWithMileSecondsExpire"),
+    MULTIPLE_GET("multipleGet"),
 
     /** List类型的命令 **/
     RIGHT_PUSH("rightPush"),
-    LIST_LENGTH("listLength");
+    LEFT_PUSH("leftPush"),
+    LIST_INSERT("listInsert"),
+    LIST_INDEX("listIndex"),
+    LIST_RANGE("listRange"),
+    LEFT_POP("leftPop"),
+    RIGHT_POP("rightPop"),
+    LIST_SET("listSet"),
+    LIST_TRIM("listTrim"),
+    LIST_LENGTH("listLength"),
+
+    /** Set类型的命令 **/
+    SET_ADD("setAdd"),
+    SET_REMOVE("setRemove"),
+    SET_SIZE("setSize"),
+    INTERSECT("setIntersect"),
+    UNION("setUnion"),
+    COMPLEMENTARY("setComplementary"),
+
+    /** Map类型的命令 **/
+    MAP_SET("mapSet"),
+    MAP_GET("mapGet"),
+    MAP_DELETE("mapDelete"),
+    MAP_SIZE("mapSize"),
+    MAP_KEYS("mapKeys"),
+    MAP_VALUES("mapValues");
 
     private String opsName;
 

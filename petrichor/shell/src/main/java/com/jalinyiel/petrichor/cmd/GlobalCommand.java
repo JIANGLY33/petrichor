@@ -7,10 +7,8 @@ import com.jalinyiel.petrichor.core.task.TaskListener;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import picocli.CommandLine;
-
-import java.util.concurrent.Callable;
 import picocli.CommandLine.*;
+import java.util.concurrent.Callable;
 
 
 public class GlobalCommand {
@@ -23,7 +21,7 @@ public class GlobalCommand {
         @Autowired
         TaskListener taskListener;
 
-        @CommandLine.Parameters(index = "0", description = "key")
+        @Parameters(index = "0", description = "key")
         private String key;
 
         @Override

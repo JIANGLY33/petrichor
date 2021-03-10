@@ -35,6 +35,10 @@ public class PetrichorList implements PetrichorValue {
         return value.size();
     }
 
+    public String index(int i) {
+        return value.get(i);
+    }
+
     public String leftPop() {
         return value.removeFirst();
     }
@@ -48,17 +52,19 @@ public class PetrichorList implements PetrichorValue {
     }
 
     public List<String> trim(int start, int end) {
+        end = end == -1 ? value.size() : end;
         LinkedList<String> newList = (LinkedList<String>) value.stream().skip(start).limit(end - start).collect(Collectors.toList());
         value = newList;
         return newList;
     }
 
     public List<String> range(int start, int end) {
+        end = end == -1 ? value.size() : end;
         return value.stream().skip(start).limit(end - start).collect(Collectors.toList());
     }
 
     public String toString() {
         String elements = value.stream().collect(Collectors.joining(","));
-        return String.format("[%s]",elements);
+        return String.format("[%s]", elements);
     }
 }

@@ -1,23 +1,21 @@
 package com.jalinyiel.petrichor.core;
 
-import com.jalinyiel.petrichor.core.collect.PetrichorList;
+import com.jalinyiel.petrichor.core.collect.PetrichorValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.Optional;
 
 @Component
-public class ContextUtil {
+public class ContextUtil<T> {
 
     @Autowired
     PetrichorContext petrichorContext;
 
-    public PetrichorList getValue(String key) {
+    public <T extends PetrichorValue> T getValue(String key) {
         PetrichorDict dict = getDataDict();
         Optional<PetrichorObject> petrichorValue = dict.getByKey(key);
-        if (!petrichorValue.isPresent()) {
-            //todo 当键对应当值不存在时
-        }
-        PetrichorList petrichorList = (PetrichorList) petrichorValue.get().getPetrichorValue();
+        T petrichorList = (T) petrichorValue.get().getPetrichorValue();
         return petrichorList;
     }
 

@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface MapOps {
 
-    ResponseResult<Void> mapSet(String key, Map map);
+    ResponseResult<Void> mapSet(String key, String entryKey, String entryValue);
 
     ResponseResult<String> mapGet(String key, String filed);
 
@@ -16,7 +16,7 @@ public interface MapOps {
 
     ResponseResult<Integer> mapSize(String key);
 
-    ResponseResult<Set<String>> mapKeys(String key);
+    ResponseResult<String> mapKeys(String key);
 
-    ResponseResult<List<String>> mapValues(String key);
+    ResponseResult<String> mapValues(String key);
 }

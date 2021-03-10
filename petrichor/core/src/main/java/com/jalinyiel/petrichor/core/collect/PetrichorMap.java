@@ -22,7 +22,12 @@ public class PetrichorMap implements PetrichorValue{
     }
 
     public Optional<String> delete(String key) {
-        return Optional.ofNullable(value.remove(key));
+        String res = value.remove(key);
+        return Optional.ofNullable(res);
+    }
+
+    public void put(String key, String value) {
+        this.value.put(key,value);
     }
 
     public Integer size() {

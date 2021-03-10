@@ -35,6 +35,21 @@ public class PetrichorSet implements PetrichorValue{
         return value;
     }
 
+    public PetrichorSet union(PetrichorSet petrichorSet) {
+        value.addAll(petrichorSet.getValue());
+        return this;
+    }
+
+    public PetrichorSet intersect(PetrichorSet petrichorSet) {
+        value.retainAll(petrichorSet.getValue());
+        return this;
+    }
+
+    public PetrichorSet complementary(PetrichorSet petrichorSet) {
+        value.removeAll(petrichorSet.getValue());
+        return this;
+    }
+
     public String toString() {
         String elements = value.stream().collect(Collectors.joining(","));
         return String.format("(%s)",elements);

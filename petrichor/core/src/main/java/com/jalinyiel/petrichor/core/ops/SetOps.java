@@ -10,9 +10,11 @@ public interface SetOps {
 
     ResponseResult<Integer> setSize(String key);
 
-    ResponseResult<Integer> setIntersect(String... keys);
+    ResponseResult<String> setIntersect(String... keys);
 
-    ResponseResult<Integer> setUnion(String... keys);
+    ResponseResult<String> setUnion(String... keys);
 
-    ResponseResult<Integer> setComplementary(String... keys);
+    ResponseResult<String> setComplementary(String... keys);
+
+    ResponseResult<String> setGet(String key);
 }

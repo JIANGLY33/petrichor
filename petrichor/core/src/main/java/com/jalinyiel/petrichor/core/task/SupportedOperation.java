@@ -30,6 +30,7 @@ public enum SupportedOperation {
     /** Set类型的命令 **/
     SET_ADD("setAdd"),
     SET_REMOVE("setRemove"),
+    SET_GET("setGet"),
     SET_SIZE("setSize"),
     INTERSECT("setIntersect"),
     UNION("setUnion"),

@@ -1,6 +1,7 @@
 package com.jalinyiel.petrichor.core;
 
 import com.jalinyiel.petrichor.core.handler.DataType;
+import com.jalinyiel.petrichor.core.handler.ListHandler;
 import com.jalinyiel.petrichor.core.handler.PetrichorHandler;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class PetrichorHandlerFactory {
         Map<String, Object> beanMap = springContextUtil.getContext().getBeansWithAnnotation(DataType.class);
 
         for(Object handler : beanMap.values()) {
-            DataType dataType = handler.getClass().getAnnotation(DataType.class);
+            DataType dataType =  handler.getClass().getAnnotation(DataType.class);
             petrichorHandlerMap.put(dataType.type(), (PetrichorHandler) handler);
         }
     }

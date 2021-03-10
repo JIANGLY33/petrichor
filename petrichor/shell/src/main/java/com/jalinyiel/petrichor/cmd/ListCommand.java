@@ -8,6 +8,7 @@ import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.*;
+
 import java.util.concurrent.Callable;
 
 @Component
@@ -61,7 +62,7 @@ public class ListCommand {
                     PetrichorTask.of(SupportedOperation.LIST_LENGTH.getOpsName(),
                             params, paramClasses, TaskType.LIST_TASK)
             );
-            System.out.println(responseResult.getData());
+            System.out.println(responseResult.isSuccess() ? responseResult.getData() : responseResult.getMsg());
             return 33;
         }
     }

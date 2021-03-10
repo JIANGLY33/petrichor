@@ -3,6 +3,7 @@ package com.jalinyiel.petrichor.core.collect;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PetrichorSet implements PetrichorValue{
 
@@ -34,4 +35,8 @@ public class PetrichorSet implements PetrichorValue{
         return value;
     }
 
+    public String toString() {
+        String elements = value.stream().collect(Collectors.joining(","));
+        return String.format("(%s)",elements);
+    }
 }

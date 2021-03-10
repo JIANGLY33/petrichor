@@ -28,7 +28,7 @@ public class ResponseResult<T> {
     }
 
     public static <T> ResponseResult<T> failedResult(AbsResultCode rc, String appendMsg) {
-        return new ResponseResult(rc.getCode(), String.format("%s|%s",rc.getMsg(),appendMsg), (Object) null);
+        return new ResponseResult(rc.getCode(), appendMsg, null);
     }
 
     public boolean isSuccess() {

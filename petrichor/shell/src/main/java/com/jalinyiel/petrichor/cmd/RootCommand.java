@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 
 
 @Component
-@Command(name = "Petrichor", subcommands = {ListCommand.class})
+@Command(name = "Petrichor", subcommands = {ListCommand.class, GlobalCommand.Del.class})
 public class RootCommand implements Callable<Integer> {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "display this help message.")

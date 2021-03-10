@@ -48,8 +48,7 @@ public class TaskListener implements PetrichorListener<ResponseResult>{
             Method method = methodOptional.get();
             Object[] params = petrichorTask.getParams();
             PetrichorHandler handler = petrichorHandlerFactory.of(petrichorTask.getType());
-            ResponseResult res = (ResponseResult) method.invoke(handler, petrichorTask.getParams());
-            return responseResultOptional.orElse(ResponseResult.successResult(CommonResultCode.SUCCESS,res.getData()));
+            return (ResponseResult) method.invoke(handler, petrichorTask.getParams());
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             log.error("TaskListener process exception|",e);
             return ResponseResult.failedResult(CommonResultCode.EXCEPTION,"invalid command!");

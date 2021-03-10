@@ -14,5 +14,7 @@ public class PetrichorString implements PetrichorValue{
         return value;
     }
 
-
+    public String toString() {
+        return value;
+    }
 }

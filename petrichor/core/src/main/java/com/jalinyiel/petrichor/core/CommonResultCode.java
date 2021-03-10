@@ -22,7 +22,7 @@ public enum CommonResultCode implements AbsResultCode {
     SING_AK_NOT_EXIST(1004, "ak不存在"),
 
     BIZ_ERROR(300, "业务错误"),
-    NOT_FOUND(404, "api不存在"),
+    NOT_FOUND(404, "key不存在"),
     UNKNOWN_ERROR(500, "未知异常");
 
     private int code;

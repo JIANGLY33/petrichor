@@ -1,18 +1,27 @@
 package com.jalinyiel.petrichor.core.handler;
 
-import com.jalinyiel.petrichor.core.ObjectEncoding;
-import com.jalinyiel.petrichor.core.ResponseResult;
+import com.jalinyiel.petrichor.core.*;
+import com.jalinyiel.petrichor.core.check.CheckKey;
 import com.jalinyiel.petrichor.core.ops.GlobalOps;
+import com.jalinyiel.petrichor.core.task.TaskType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GlobalHandler implements GlobalOps {
+@DataType(type = TaskType.GLOBAL_TASK)
+public class GlobalHandler extends PetrichorHandler implements GlobalOps {
 
+    @Autowired
+    PetrichorContext petrichorContext;
 
+    @Autowired
+    ContextUtil contextUtil;
 
     @Override
+    @CheckKey
     public ResponseResult<String> delete(String key) {
-        return null;
+        PetrichorObject petrichorObject = contextUtil.delete(key);
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorObject.getPetrichorValue().toString());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.jalinyiel.petrichor.cmd;
 
 import com.jalinyiel.petrichor.core.TestObject;
+import com.jalinyiel.petrichor.core.handler.DataType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.stereotype.Component;
@@ -75,6 +76,9 @@ public class CommandRunner implements CommandLineRunner, ExitCodeGenerator {
             m = to.getClass().getMethod("testPrint", c);
             Object params = new String[]{"hello","world"};
             m.invoke(to,params);
+            String className = to.getClass().getName();
+            DataType dataType = to.getClass().getAnnotation(DataType.class);
+            System.out.println(dataType);
         } catch (NoSuchMethodException noSuchMethodException) {
             noSuchMethodException.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -82,5 +86,6 @@ public class CommandRunner implements CommandLineRunner, ExitCodeGenerator {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+
     }
 }

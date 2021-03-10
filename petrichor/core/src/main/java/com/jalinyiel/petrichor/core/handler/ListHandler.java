@@ -1,6 +1,7 @@
 package com.jalinyiel.petrichor.core.handler;
 
 import com.jalinyiel.petrichor.core.*;
+import com.jalinyiel.petrichor.core.check.CheckKey;
 import com.jalinyiel.petrichor.core.collect.PetrichorList;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.ops.ListOps;
@@ -8,34 +9,32 @@ import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @DataType(type = TaskType.LIST_TASK)
-public class ListHandler extends PetrichorHandler implements ListOps{
+public class ListHandler extends PetrichorHandler implements ListOps {
 
     @Autowired
     PetrichorContext petrichorContext;
 
-    private final ObjectType keyType = ObjectType.PETRICHOR_STRING;
+    @Autowired
+    ContextUtil contextUtil;
 
-    private final ObjectType valueType = ObjectType.PETRICHOR_LIST;
+    private final ObjectType VALUE_TYPE = ObjectType.PETRICHOR_LIST;
 
-    private final ObjectEncoding keyEncoding = ObjectEncoding.RAW_STRING;
-
-    private final ObjectEncoding valueEncoding = ObjectEncoding.LINKED_LIST;
+    private final ObjectEncoding VALUE_ENCODING = ObjectEncoding.LINKED_LIST;
 
     @Override
     public ResponseResult<Void> rightPush(String key, String... values) {
-        if (!keyExist(key)) {
+        if (!contextUtil.keyExist(key)) {
             PetrichorList value = new PetrichorList();
             value.rightPush(values);
             PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
             PetrichorDict dict = petrichorDb.getKeyValues();
-            dict.put(PetrichorObjectFactory.of(keyType,keyEncoding,new PetrichorString(key)),
-                    PetrichorObjectFactory.of(valueType,valueEncoding,value));
+            dict.put(PetrichorObjectFactory.of(PetrichorUtil.KEY_TYPE, PetrichorUtil.KEY_ENCODING, new PetrichorString(key)),
+                    PetrichorObjectFactory.of(VALUE_TYPE, VALUE_ENCODING, value));
         } else {
-            PetrichorList petrichorList = getValue(key);
+            PetrichorList petrichorList = contextUtil.getValue(key);
             petrichorList.rightPush(values);
         }
         return ResponseResult.successResult(CommonResultCode.SUCCESS);
@@ -62,8 +61,9 @@ public class ListHandler extends PetrichorHandler implements ListOps{
     }
 
     @Override
+    @CheckKey
     public ResponseResult<Integer> listLength(String key) {
-        PetrichorList petrichorList = getValue(key);
+        PetrichorList petrichorList = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.size());
     }
 
@@ -87,20 +87,4 @@ public class ListHandler extends PetrichorHandler implements ListOps{
         return null;
     }
 
-    private PetrichorList getValue(String key) {
-        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
-        PetrichorDict dict = petrichorDb.getKeyValues();
-        Optional<PetrichorObject> petrichorValue = dict.getByKey(key);
-        if (!petrichorValue.isPresent()) {
-            //todo 当键对应当值不存在时
-        }
-        PetrichorList petrichorList = (PetrichorList) petrichorValue.get().getPetrichorValue();
-        return petrichorList;
-    }
-
-    private boolean keyExist(String key) {
-        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
-        PetrichorDict dict = petrichorDb.getKeyValues();
-        return dict.exist(key);
-    }
 }

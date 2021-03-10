@@ -36,4 +36,11 @@ public class PetrichorMap implements PetrichorValue{
     public List<String> values() {
         return value.values().stream().collect(Collectors.toList());
     }
+
+    public String toString() {
+        String elements = value.entrySet().stream()
+                .map(entrySet -> String.format("%s->%s",entrySet.getKey(),entrySet.getValue()))
+                .collect(Collectors.joining(","));
+        return String.format("{%s}",elements);
+    }
 }

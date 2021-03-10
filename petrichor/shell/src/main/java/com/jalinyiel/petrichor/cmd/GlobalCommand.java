@@ -32,8 +32,8 @@ public class GlobalCommand {
             Object[] params = {key};
             ResponseResult responseResult =
                     taskListener.process(
-                            PetrichorTask.of(SupportedOperation.DELETE_KEY.getOpsName(), params, paramClasses, TaskType.LIST_TASK));
-            System.out.println(responseResult.isSuccess() ? "OK" : responseResult.getMsg());
+                            PetrichorTask.of(SupportedOperation.DELETE_KEY.getOpsName(), params, paramClasses, TaskType.GLOBAL_TASK));
+            System.out.println(responseResult.isSuccess() ? responseResult.getData() : responseResult.getMsg());
             return 33;
         }
     }

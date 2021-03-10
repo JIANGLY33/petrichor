@@ -56,4 +56,9 @@ public class PetrichorList implements PetrichorValue {
     public List<String> range(int start, int end) {
         return value.stream().skip(start).limit(end - start).collect(Collectors.toList());
     }
+
+    public String toString() {
+        String elements = value.stream().collect(Collectors.joining(","));
+        return String.format("[%s]",elements);
+    }
 }

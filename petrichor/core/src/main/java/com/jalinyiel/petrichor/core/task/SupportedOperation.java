@@ -9,11 +9,11 @@ public enum SupportedOperation {
     TYPE_KEY("type"),
 
     /** String类型的命令 **/
-    SET("set"),
-    GET("get"),
-    SET_SECONDS_EXPIRE("setWithSecondsExpire"),
-    SET_MILE_SECONDS_EXPIRE("setWithMileSecondsExpire"),
-    MULTIPLE_GET("multipleGet"),
+    STRING_SET("set"),
+    STRING_GET("get"),
+    STRING_SET_SECONDS_EXPIRE("setWithSecondsExpire"),
+    STRING_SET_MILE_SECONDS_EXPIRE("setWithMileSecondsExpire"),
+    STRING_MULTIPLE_GET("multipleGet"),
 
     /** List类型的命令 **/
     RIGHT_PUSH("rightPush"),

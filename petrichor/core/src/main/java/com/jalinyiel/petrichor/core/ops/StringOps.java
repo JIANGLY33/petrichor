@@ -14,6 +14,6 @@ public interface StringOps {
 
     ResponseResult<Void> setWithMileSecondsExpire(String key, long mileSeconds, String value);
 
-    ResponseResult<List<String>> multipleGet(String... keys);
+    ResponseResult<String> multipleGet(String... keys);
 
 }

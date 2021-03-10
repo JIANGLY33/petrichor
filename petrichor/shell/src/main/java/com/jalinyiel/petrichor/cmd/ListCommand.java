@@ -8,20 +8,22 @@ import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.*;
+
 import java.util.concurrent.Callable;
 
 @Component
-@Command(name = "list", description = "[operation list type data]", mixinStandardHelpOptions = true, subcommands = {
-        ListCommand.RPush.class,
-        ListCommand.LPush.class,
-        ListCommand.Insert.class,
-        ListCommand.Index.class,
-        ListCommand.Range.class,
-        ListCommand.Trim.class,
-        ListCommand.LPop.class,
-        ListCommand.RPop.class,
-        ListCommand.LLength.class
-})
+@Command(name = "list", description = "[operation list type data]", mixinStandardHelpOptions = true,
+        subcommands = {
+                ListCommand.RPush.class,
+                ListCommand.LPush.class,
+                ListCommand.Insert.class,
+                ListCommand.Index.class,
+                ListCommand.Range.class,
+                ListCommand.Trim.class,
+                ListCommand.LPop.class,
+                ListCommand.RPop.class,
+                ListCommand.LLength.class
+        })
 public class ListCommand {
 
     @Component
@@ -52,7 +54,7 @@ public class ListCommand {
 
     @Component
     @Command(name = "lpush", mixinStandardHelpOptions = true,
-            exitCodeOnExecutionException = 34,description = "push new element to list from left")
+            exitCodeOnExecutionException = 34, description = "push new element to list from left")
     static class LPush implements Callable<Integer> {
 
         @Autowired
@@ -240,7 +242,7 @@ public class ListCommand {
 
     @Component
     @Command(name = "trim", mixinStandardHelpOptions = true,
-            exitCodeOnExecutionException = 34,description = "remain elements in rangee(left-closed and right-open)")
+            exitCodeOnExecutionException = 34, description = "remain elements in rangee(left-closed and right-open)")
     static class Trim implements Callable<Integer> {
 
         @Autowired

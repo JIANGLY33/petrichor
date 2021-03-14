@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>							
+<head> 
+    <title>Petrichor</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link href="../js/pluginsPackage/bootstrap-3.3.0/bootstrap.css" rel="stylesheet" type="text/css"></link>
+    <link href="../js/pluginsPackage/swiper/swiper.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/style.css" rel="stylesheet" type="text/css"></link>
+	  <link href="../css/office_efficiency_index.css" rel="stylesheet" type="text/css"></link>
+	  <script type="text/javascript">
+      //埋点全局变量
+      var gDataGather={
+          systemCode:"dataanalysis",
+          systemName:"CRM数据分析",
+          moduleCode:"dataanalysis-m001",
+          moduleName:"稳定运营",
+          pageCode:"dataanalysis-m001-p0007",
+          pageName:"厅店效能分析",
+          param:"{}"
+      }
+   </script>
+</head> 
+<body>
+    <div class="container-fluid container-bg office-efficiency-index">
+	    <div class="row  office-header">
+	        <div class="col-sm-12 col-md-12 pd  title-info">Petrichor数据监控</div>
+	        <div class="col-sm-5  col-md-5 pd analysis-info">系统运行状况良好</div>
+	        <div class="col-sm-7  col-md-7 pd analysis-filter">
+	        </div>
+	    </div>
+	    <div class="row  office-header-content">
+	         <div class="col-sm-3 col-md-3 pd">
+	            <div  class="col-info">
+	               <div class="title">系统基本信息</div>
+				   <div class="content base-info" id="base-info">
+                    <table>
+                        <tr></tr>
+                            <td colspan="4">
+                                <div class="channel-name">XXXX</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ding-dan-bg"></div>
+                            </td>
+                            <td >
+                                <div class="ding-dan-bg"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="liang-shu-zhi" type="dingdanVal">--</div>
+                            </td>
+                            <td>
+                                <div class="liang-shu-zhi" type="dingdanVal">--</div>
+                            </td>
+                        </tr>
+                        <tr class="td-shu-zhi">
+                            <td>键值对总数</td>
+                            <td>当日执行任务数</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ke-liu-bg"></div>
+                            </td>
+                            <td>
+                                <div class="pai-dui-ji-bg"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="liang-shu-zhi" type="custNumVal">--</div>
+                            </td>
+                            <td>
+                                <div class="liang-shu-zhi" type="lineUpVal">--</div>
+                            </td>
+                        </tr>
+                        <tr class="td-shu-zhi">
+                            <td>过期总键数</td>
+                            <td>系统运行时长</td>
+                        </tr>
+                    </table>
+                </div>
+	            </div>
+	         </div>
+	         <div class="col-sm-6 col-md-6 pd">
+	            <div  class="col-info">
+	               <div class="title">各数据类型任务数 </div>
+	               <div class="content" id="channel_handle_detail"></div>
+	            </div>
+	         </div>
+	         <div class="col-sm-3 col-md-3 pd">
+	            <div  class="col-info">
+	               <div class="title">最近过期数据</div>
+	               <div class="content staff-info" id="staff-info">
+	               </div>
+	            </div>
+	         </div>
+	         <div class="col-sm-3 col-md-3 pd device-info-col">
+	            <div  class="col-info">
+	               <div class="title">内存占用分析</div>
+	               <div class="content deviceInfo" id="device-info">
+	               </div>
+	            </div>
+	         </div>
+	         <div class="col-sm-5 col-md-5 pd time-step-col">
+	            <div  class="col-info">
+	               <div class="title">慢查询分析</div>
+	               <div class="content" id="time-step-detial"></div>
+	            </div>
+	         </div>
+	         <div class="col-sm-4 col-md-4 pd business-type-time-col">
+	            <div  class="col-info">
+	               <div class="title">热点数据</div>
+	               <div class="content" id="business-type-time-detial"></div>
+	            </div>
+	         </div>
+	    </div>
+    </div>
+    <!--特效动画效果-->
+	<div id="query-page-data" style="display:none" onclick="loadPageData()"  sa-gatherClick="true" elementCode="dataanalysis-m001-p0007-e00001"  elementName="查询数据"></div>
+	<script src="../js/pluginsPackage/jquery/jquery.1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/pluginsPackage/bootstrap-3.3.0/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/pluginsPackage/bootstrap-3.3.0/respond.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/pluginsPackage/swiper/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/pluginsPackage/echarts/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/office_efficiency_data.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/office_efficiency_index.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

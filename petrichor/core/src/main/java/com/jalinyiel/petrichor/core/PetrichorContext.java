@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,8 +16,11 @@ public class PetrichorContext {
 
     private List<PetrichorDb> petrichorDbs;
 
+    private Instant initInstant;
+
     public PetrichorContext() {
         petrichorDbs = new LinkedList<>();
+        initInstant = Instant.now();
     }
 
     @PostConstruct
@@ -31,4 +35,17 @@ public class PetrichorContext {
         return petrichorDbs.get(currentDbId);
     }
 
+    public Instant getInitInstant() {
+        return initInstant;
+    }
+
+    public long curDbTaskIncre() {
+        PetrichorDb petrichorDb = petrichorDbs.get(currentDbId);
+        return petrichorDb.taskCountIncre();
+    }
+
+    public long getCurDbTaskNums() {
+        PetrichorDb petrichorDb = petrichorDbs.get(currentDbId);
+        return petrichorDb.getTaskCount().get();
+    }
 }

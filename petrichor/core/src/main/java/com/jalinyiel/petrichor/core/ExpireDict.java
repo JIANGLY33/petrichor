@@ -12,4 +12,8 @@ public class ExpireDict {
     public ExpireDict() {
         this.dict = new HashMap<>();
     }
+
+    public int size() {
+        return dict.size();
+    }
 }

@@ -8,155 +8,19 @@ var g_channelName="当前时间：";
 
 //门店基本信息
 function loadChannelBaseInfo(data){
-	// //获取渠道积分数据
-	// var staffHandleInfo=data.staffHandleInfo;
-	// //获取渠道总积分
-	// var channelJfMap=staffHandleInfo.channelJfMap || {};
-	// //获取渠道总积分
-	// var channelSum=channelJfMap.channelSum || 0;
-	// //获取渠道排名
-	// var channelOrder=channelJfMap.channelOrder || 1;
-	// var channelTotal=channelJfMap.channelTotal || 1
-	// var popval=String(parseFloat(channelOrder/channelTotal));
 	//获取台席健康度得分
 	var memoryAnalysis=data.memoryAnalysis;
-	var finalDeviceScore=memoryAnalysis.finalDeviceScore || 0;
-	// if(finalDeviceScore<=0){
-	// 	$("#base-info .device-score").find("img").attr("src","../static/images/star3.png");
-	// }else if(finalDeviceScore<0.95){
-	// 	$("#base-info .device-score").find("img").attr("src","../static/images/star2.png");
-	// }else{
-	// 	$("#base-info .device-score").find("img").attr("src","../static/images/star1.png");
-	// }
-	// $("#base-info .device-score").find(".score-val").text(finalDeviceScore+"分");
 	
 	//设置渠道当日客流量、订单量
 	$("#base-info").find("div[type='dingdanVal']").text(memoryAnalysis.channelOrderNum || "--");
 	$("#base-info").find("div[type='custNumVal']").text(memoryAnalysis.channelCustNum || "--");
-	
-	//设置门店基本信息-违规行为
-	// var channelStartWeiGui=staffHandleInfo.channelStartWeiGui || 0;
-	// if(channelStartWeiGui==1){
-	// 	$("#base-info .weigui").find("img").attr("src","../static/images/star1.png");
-	// }else{
-	// 	$("#base-info .weigui").find("img").attr("src","../static/images/star3.png");
-	// }
-	// $("#base-info .weigui").find(".score-val").text(channelStartWeiGui+"分");
-	//设置门店基本信息-营销评级
-	// var yingxiaoval=1-popval;
-	// yingxiaoval=keepTwoDecimal(yingxiaoval);
-	// if(yingxiaoval<=0){
-	// 	$("#base-info .yingxiao").find("img").attr("src","../static/images/star3.png");
-	// }else if(yingxiaoval<0.95){
-	// 	$("#base-info .yingxiao").find("img").attr("src","../static/images/star2.png");
-	// }else{
-	// 	$("#base-info .yingxiao").find("img").attr("src","../static/images/star1.png");
-	// }
-	// $("#base-info .yingxiao").find(".score-val").text(yingxiaoval+"分");
-	//设置门店基本信息-受理速度
-	// var avgTimeScore=0;
-	// var slowQueryAnalysis=data.slowQueryAnalysis;
-	// if(slowQueryAnalysis.timeCost.length>0){
-	// 	avgTimeScore=slowQueryAnalysis.timeCost[4]/slowQueryAnalysis.provinceTime[4];
-	// 	if(avgTimeScore>1){
-	// 		avgTimeScore=avgTimeScore*0.335;
-	// 	}
-	// }
-	// avgTimeScore=keepTwoDecimal(avgTimeScore*0.5+0.5);
-	// avgTimeScore=avgTimeScore>1?1:avgTimeScore;
-	// if(avgTimeScore<=0){
-	// 	$("#base-info .avgtime").find("img").attr("src","../static/images/star3.png");
-	// }else if(avgTimeScore<0.95){
-	// 	$("#base-info .avgtime").find("img").attr("src","../static/images/star2.png");
-	// }else{
-	// 	$("#base-info .avgtime").find("img").attr("src","../static/images/star1.png");
-	// }
-	// $("#base-info .avgtime").find(".score-val").text(avgTimeScore+"分");
-	//设置门店基本信息-业务量
-	// var yewuliangVal=0;
-	// var channelHandleInfo=data.channelHandleInfo;
-	// var setTaskNum=channelHandleInfo.setTaskNum;
-	// if(setTaskNum.length>2){
-	// 	var t1=setTaskNum[setTaskNum.length-1];
-	// 	var t2=setTaskNum[setTaskNum.length-2];
-	// 	if(t1!=0 && t2!=0){
-	// 		yewuliangVal=t1>t2?t2/t1:t1/t2;
-	// 	}else{
-	// 		yewuliangVal=0.45;
-	// 	}
-	// 	if(yewuliangVal>1){
-	// 		yewuliangVal=yewuliangVal*0.335;
-	// 	}
-	// }
-	// yewuliangVal=keepTwoDecimal(yewuliangVal*0.5+0.5);
-	// yewuliangVal=yewuliangVal>1?1:yewuliangVal;
-	// if(yewuliangVal<=0){
-	// 	$("#base-info .yewuliang").find("img").attr("src","../static/images/star3.png");
-	// }else if(yewuliangVal<0.95){
-	// 	$("#base-info .yewuliang").find("img").attr("src","../static/images/star2.png");
-	// }else{
-	// 	$("#base-info .yewuliang").find("img").attr("src","../static/images/star1.png");
-	// }
-	// $("#base-info .yewuliang").find(".score-val").text(yewuliangVal+"分");
+
 	//设置门店基本信息-排队机耗时
 	var channelHandleInfo=data.channelHandleInfo;
 	var callTime=channelHandleInfo.listTaskNum[channelHandleInfo.listTaskNum.length-1];
 	$("#base-info").find("div[type='lineUpVal']").text(callTime|| "无");
-	//开始计算门店星级
-	// var channelTotalScore=parseFloat(finalDeviceScore)+parseFloat(channelStartWeiGui)+parseFloat(yingxiaoval)+parseFloat(avgTimeScore)+parseFloat(yewuliangVal);
-	// channelTotalScore=String(channelTotalScore);
-	// channelTotalScore=keepTwoDecimal(channelTotalScore);
-	// $("#base-info").find(".channel-total-score").text(channelTotalScore+"分" || "--分");
-	// $("#base-info").find(".chanenl-star").empty();
-	// var starLen=Math.floor(channelTotalScore);
-	// for(var idx=0;idx<starLen;idx++){
-	// 	var img='<img src="../static/images/star1.png"/>';
-	// 	$("#base-info").find(".chanenl-star").append(img);
-	// }
-	// $("#base-info").find(".chanenl-star").append('<div>'+channelTotalScore+'分</div>');
-	
-	// if(starLen<channelTotalScore){
-	// 	var img='<img src="../static/images/star2.png" style="width:21px;height:20px;"/>';
-	// 	$("#base-info").find("#chanenl-star").append(img);
-	// }
-	// var unit="";
-	// if(channelSum>90000){
-	// 	unit="万";
-	// 	channelSum=keepTwoDecimal(channelSum/10000);
-	// }
-	// var maxval=channelSum-channelSum*(1-popval),currval=channelSum;
-	// //特殊处理，优化饼图数据美观
-	// if(0==channelSum ){
-	// 	maxval=1000;
-	// }
-	// var option = {
-    //     series: [{
-    //         type: 'pie',radius: ['65%', '80%'],color: '#E63F19',label: {normal: {position: 'center'}},
-    //         data: [{
-    //             value: currval,//当前值
-    //             name: '积分',
-    //             label: {normal: {formatter: currval + unit,textStyle: {fontSize: 16,color: '#FED546'}}}
-    //         },{
-    //             value: maxval,//比对值
-    //             name: '积分',
-    //             label: {normal: {formatter: function (params) {return '\n积分' },textStyle: {color: '#fff',fontSize: 13}}},
-    //             itemStyle: {normal: {color: 'rgba(255,255,255,.2)'},emphasis: {color: '#fff'}},
-    //         }]
-    //     }]
-	// };
     
     $("#base-info").find(".channel-name").text(g_channelName || "系统运行状况良好");
-    // var popval2=keepTwoDecimal(popval);
-    // $("#base-info").find(".popval").text("全省前"+(popval2*100)+"%" || "全省前0%");
-    // var rePortData={};
-    // //厅办理业务平均耗时
-    // rePortData.channelAvgTime=staffHandleInfo.channelAvgTime;
-    // //厅排队机
-    // rePortData.lineUpData=channelHandleInfo.lineUpData
-    // //渠道积分排名占比
-    // rePortData.popval=popval;
-    // rePortData.custNumData=channelHandleInfo.custNumData;
-    // channelReportContent(rePortData);
 }
 //渠道报告内容建议说明
 function channelReportContent(rePortData){
@@ -769,7 +633,7 @@ $(function(){
 	//加载页面数据
 	loadPageData();
 
-	setInterval(print,1000)
+	setInterval(loadPageData,1000*30)
 })
 
 function print() {

@@ -1,6 +1,6 @@
 package com.jalinyiel.petrichor.core;
 
-import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class PetrichorDb {
 
@@ -10,11 +10,14 @@ public class PetrichorDb {
 
     private ExpireDict expireKeys;
 
+    private AtomicLong taskCount;
+
 
     public PetrichorDb(int id, PetrichorDict keyValues, ExpireDict expireKeys) {
         this.id = id;
         this.keyValues = keyValues;
         this.expireKeys = expireKeys;
+        this.taskCount = new AtomicLong(0);
     }
 
     public int getId() {
@@ -27,5 +30,13 @@ public class PetrichorDb {
 
     public ExpireDict getExpireKeys() {
         return expireKeys;
+    }
+
+    public AtomicLong getTaskCount() {
+        return taskCount;
+    }
+
+    public long taskCountIncre(){
+        return taskCount.incrementAndGet();
     }
 }

@@ -4,6 +4,8 @@ import com.jalinyiel.petrichor.core.collect.PetrichorValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 @Component
@@ -34,4 +36,28 @@ public class ContextUtil<T> {
         PetrichorDict dict = petrichorDb.getKeyValues();
         return dict;
     }
+
+    public long taskNumIncre() {
+        return petrichorContext.curDbTaskIncre();
+    }
+
+    public long getTaskNums() {
+        return petrichorContext.getCurDbTaskNums();
+    }
+
+    public long getKeySize() {
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        return petrichorDb.getKeyValues().size();
+    }
+
+    public long getExpireKeySize() {
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        return petrichorDb.getExpireKeys().size();
+    }
+
+    public long getRunDuration() {
+        Duration duration = Duration.between(petrichorContext.getInitInstant(), Instant.now());
+        return duration.getSeconds();
+    }
+
 }

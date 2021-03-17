@@ -15,6 +15,7 @@
         <module>core</module>
         <module>starter</module>
         <module>shell</module>
+        <module>monitor</module>
     </modules>
 
     <!--子模块的Spring Boot配置-->
@@ -68,6 +69,16 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-devtools</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-core</artifactId>
+                <version>4.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.1-jre</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

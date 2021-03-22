@@ -49,6 +49,6 @@ public class HandlerAspect {
     @Before("allTasks()")
     public void allTask(JoinPoint joinPoint) {
         long taskNums = contextUtil.taskNumIncre();
-        log.info(String.format("%s is executing,task num is %d.",joinPoint.getSignature(),taskNums));
+//        log.info(String.format("%s is executing,task num is %d.",joinPoint.getSignature(),taskNums));
     }
 }

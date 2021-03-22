@@ -6,6 +6,9 @@ import java.io.Serializable;
 
 @Data
 public class ExpireKeysInfo implements Serializable {
+
+    private static final long serialVersionUID = 4189374943846123649L;
+
     private String keyName;
 
     private String type;

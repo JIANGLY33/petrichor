@@ -8,19 +8,16 @@ var g_channelName="当前时间：";
 
 //门店基本信息
 function loadChannelBaseInfo(data){
-	//获取台席健康度得分
-	var memoryAnalysis=data.memoryAnalysis;
-	
+	console.log("data is", data)
 	//设置渠道当日客流量、订单量
-	$("#base-info").find("div[type='dingdanVal']").text(memoryAnalysis.channelOrderNum || "--");
-	$("#base-info").find("div[type='custNumVal']").text(memoryAnalysis.channelCustNum || "--");
+	$("#base-info").find("div[type='keyNums']").text(data.keyNums);
+	$("#base-info").find("div[type='taskNums']").text(data.handledTaskNums);
+	$("#base-info").find("div[type='expireKeyNums']").text(data.expireKeyNums);
 
 	//设置门店基本信息-排队机耗时
-	var channelHandleInfo=data.channelHandleInfo;
-	var callTime=channelHandleInfo.listTaskNum[channelHandleInfo.listTaskNum.length-1];
-	$("#base-info").find("div[type='lineUpVal']").text(callTime|| "无");
+	$("#base-info").find("div[type='runTime']").text(data.runDuration + "秒");
     
-    $("#base-info").find(".channel-name").text(g_channelName || "系统运行状况良好");
+    $("#base-info").find(".channel-name").text(g_channelName+new Date().toLocaleDateString() + " " +new Date().toLocaleTimeString());
 }
 //渠道报告内容建议说明
 function channelReportContent(rePortData){
@@ -86,7 +83,7 @@ function loadChannelHandleDetail(data){
 		    },
 		    xAxis: [{
 		        type: 'category',boundaryGap: false,axisLine: {lineStyle: {color: '#57617B'}},axisLabel: {textStyle: {color:'#fff'}},
-		        data: data.dataDateArr
+		        data: data.times
 		    }],
 		    yAxis: [{
 		        type: 'value',
@@ -114,7 +111,7 @@ function loadChannelHandleDetail(data){
 		            }
 		        },
 		        itemStyle: {normal: { color: '#B996F8'}},
-		        data: data.stringTaskNum
+		        data: data.stringTaskCounts
 		    }, {
 		        name: 'List',type: 'line',smooth: true,lineStyle: { normal: {width: 2}},
 		        yAxisIndex:0,
@@ -132,7 +129,7 @@ function loadChannelHandleDetail(data){
 		            }
 		        },
 		        itemStyle: {normal: {color: '#03C2EC'}},
-		        data: data.listTaskNum
+		        data: data.listTaskCounts
 		    }, {
 		        name: 'Set',type: 'line',smooth: true,lineStyle: {normal: {width: 2}},
 		        yAxisIndex:0,
@@ -150,7 +147,7 @@ function loadChannelHandleDetail(data){
 		            }
 		        },
 		        itemStyle: {normal: {color: '#DA3914'}},
-		        data: data.setTaskNum
+		        data: data.setTaskCount
 		    },{
 		        name: 'Map',type: 'line',smooth: true,lineStyle: {normal: {width: 2}},
 		        yAxisIndex:0,
@@ -168,14 +165,14 @@ function loadChannelHandleDetail(data){
 		            }
 		        },
 		        itemStyle: {normal: {color: '#E8BE31'}},
-		        data:data.mapTaskNum
+		        data:data.mapTaskCount
 		    }]
 		    
 		    
 	};
 	var myChart = echarts.init(document.getElementById('channel_handle_detail'));
 	myChart.clear();
-	if(data.stringTaskNum.length>0){
+	if(data.mapTaskCount.length>0){
 		myChart.setOption(option);
 	}else{
 		noDataTip($("#channel_handle_detail"));
@@ -190,78 +187,75 @@ function loadStaffHandleDetail(data){
 	//获取员工积分信息
 	// var channelJfMap=data.channelJfMap;
 	var channelStaffLen=data.channelStaffLen;
-	var expireDataInfo=data.expireDataInfo || [],staffHandleInfoLen=expireDataInfo.length;
+	var expireDataInfo=data.keysInfos || [],staffHandleInfoLen=expireDataInfo.length;
 	var html=[],index=0;
-	for(var key in expireDataInfo){
-		var itemArr=expireDataInfo[key];
+	for(var i = 0; i < expireDataInfo.length; i = i+2){
 		index++;
 		var indexClass=(1==index)?"first":"";
-		var wgCount=staffWgInfo[itemArr[0].staffCode] || "0";
 		var tr1=[
 			'<tr class="td-avg-time">',
 			'<td colspan="3">',
-					'<div class="index '+indexClass+'">'+itemArr[0].index+'</div>',
-					'<div class="staff-name">'+itemArr[0].keyName+'</div>',
+					'<div class="index '+indexClass+'">'+expireDataInfo[i].index+'</div>',
+					'<div class="staff-name">'+expireDataInfo[i].keyName+'</div>',
 				'</td>',
 			'</tr>',
 			'<tr>',
 				'<td> ',
 					'<div class="staff-cust-time">',
-					   '<span style="font-size:15px;">数据类型</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+itemArr[0].type+'</span>',
+					   '<span style="font-size:15px;">数据类型</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i].type+'</span>',
 					'</div>',
 				'</td>',
 				'<td>',
 					'<div class="staff-order-count">',
-					    '<span style="font-size:15px;">访问次数</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+itemArr[0].visitNum+' 次</span>',
+					    '<span style="font-size:15px;">访问次数</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i].visitNum+' 次</span>',
 					'</div>',
 				'</td>',
 				'<td>',
 					'<div class="staff-alarm">',
-					   '<span style="font-size:15px;">占用内存</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+itemArr[0].memory+' B</span>',
+					   '<span style="font-size:15px;">占用内存</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i].memory+' B</span>',
 					'</div>',
 			    '</td>',
 			'</tr> ',
 			'<tr class="td-integral"> ',
 				'<td colspan="3"> ',
 				'<div class="integral-label">过期时间: </div> ',
-				'<div class="integral-value" style="width:60px;">'+itemArr[0].expireTime+'</div>',
+				'<div class="integral-value" style="width:60px;">'+expireDataInfo[i].expireTime+'</div>',
 				'</td> ',
 			'</tr> ',
 		];
 		var tr2=[];
-		if(itemArr.length>1){
+		if(i < expireDataInfo.length){
 			index++;
 			var indexClass=(2==index)?"second":"";
-			var wgCount=staffWgInfo[itemArr[1].staffCode] || "0";
 			tr2=[
 				'<tr><td colspan="3"><div class="split-line"></div></td></tr>',
 				'<tr class="td-avg-time">',
 				'<td colspan="3">',
-						'<div class="index '+indexClass+'">'+itemArr[1].index+'</div>',
-						'<div class="staff-name">'+itemArr[1].keyName+'</div>',
+						'<div class="index '+indexClass+'">'+expireDataInfo[i+1].index+'</div>',
+						'<div class="staff-name">'+expireDataInfo[i+1].keyName+'</div>',
 					'</td>',
 				'</tr>',
 				'<tr>',
 					'<td> ',
 						'<div class="staff-cust-time">',
-						   '<span style="font-size:15px;">数据类型</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+itemArr[1].type+'</span>',
+						   '<span style="font-size:15px;">数据类型</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i+1].type+'</span>',
 						'</div>',
 					'</td>',
 					'<td>',
 						'<div class="staff-order-count">',
-							'<span style="font-size:15px;">访问次数</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+itemArr[1].visitNum+' 次</span>',
+							'<span style="font-size:15px;">访问次数</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i+1].visitNum+' 次</span>',
 						'</div>',
 					'</td>',
 					'<td>',
 						'<div class="staff-alarm">',
-						   '<span style="font-size:15px;">占用内存</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+itemArr[1].memory+' B</span>',
+						   '<span style="font-size:15px;">占用内存</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i+1].memory+' B</span>',
 						'</div>',
 					'</td>',
 				'</tr> ',
 				'<tr class="td-integral"> ',
 					'<td colspan="3"> ',
 					'<div class="integral-label">过期时间: </div> ',
-					'<div class="integral-value" style="width:60px;">'+itemArr[1].expireTime+'</div>',
+					'<div class="integral-value" style="width:60px;">'+expireDataInfo[i+1].expireTime+'</div>',
 					'</td> ',
 				'</tr> ',
 			]
@@ -448,12 +442,12 @@ function loadTimeStepDetail(data){
 
 //加载热点数据及其频率
 function loadBusinessTypeTimeDetail(data){
-	var maxOrder=Math.max.apply(null,data.memory);
+	var maxOrder=Math.max.apply(null,data.hotSpotMemories);
 	var option = {
 			title : {text:'',subtext:'',top:'3',right:'0'},
             tooltip: {trigger: 'axis'},
             grid: {left: '8%',right: '8%',bottom: '10%'},
-            xAxis: {type: 'category',axisLine: {lineStyle: {color: '#57617B'}},axisLabel: {interval:0,textStyle: {color:'#fff',}},data: data.keys},
+            xAxis: {type: 'category',axisLine: {lineStyle: {color: '#57617B'}},axisLabel: {interval:0,textStyle: {color:'#fff',}},data: data.hotSpotKeys},
             yAxis:[
        	        {
        	          type: 'value',name: '',
@@ -495,7 +489,7 @@ function loadBusinessTypeTimeDetail(data){
 			            }
 			        },
 			        itemStyle: {normal: { color: '#DA2F78'}},
-		            data:data.queryTimes
+		            data:data.hotSpotQueryTimes
 		        },
 		        {
 		            name:'占用内存',
@@ -515,13 +509,13 @@ function loadBusinessTypeTimeDetail(data){
 				            shadowColor: 'rgba(0, 0, 0, 0.1)',
 				        }
 		            },
-		            data:data.memory
+		            data:data.hotSpotMemories
 		        }
           ]
     };
 	var myChart = echarts.init(document.getElementById('business-type-time-detial'));
 	myChart.clear();
-	if(data.memory.length>0){
+	if(data.hotSpotMemories.length>0){
 		myChart.setOption(option);
 	}else{
 		noDataTip($("#business-type-time-detial"));
@@ -585,7 +579,7 @@ function noDataTip($selector){
 	var top=currModH>180?"35%":"13%";
 	var $li=[
         "<div class='no-data' style='width:90%;position: absolute;top:"+top+";text-align:center;color:#a59999;'>",
-		   "<img src='../static/images/no-data.png' style='width:200px;height:200px;'/>",
+		   "<img src='../images/no-data.png' style='width:200px;height:200px;'/>",
 		   "<div style='font-size:16px;opacity:0.7;color:#fff;'>暂无数据</div>",
         "</div>"
     ]
@@ -610,21 +604,23 @@ function loadPageData(){
 	 });
 	
 	 //引入office_efficiency_data.js缓存假数据
-	 if(data.code==0){
-	 	  $(".no-data").remove();
-		   //加载门店基本信息
-		  loadChannelBaseInfo(data);
-		  //加载门店历史受理详情
-		  loadChannelHandleDetail(data.channelHandleInfo);
-		  //加载营业员受理详情
-		  loadStaffHandleDetail(data.expireDataInfo);
-		  //加载门店台席健康度详情
-		  loadChannelDeviceDetail(data.memoryAnalysis);
-		  //加载耗时步骤分析
-		  loadTimeStepDetail(data.slowQueryAnalysis);
-		  //加载业务类型耗时详情
-		  loadBusinessTypeTimeDetail(data.hotSpotInfo);
-	 }
+	var actualData = data.code == 0?data:get("/monitor");
+	console.log(actualData)
+
+	$(".no-data").remove();
+	//加载门店基本信息
+	loadChannelBaseInfo(actualData.baseInfoSummary);
+	//加载门店历史受理详情
+	loadChannelHandleDetail(actualData.taskInfoSummary);
+	//加载营业员受理详情
+	loadStaffHandleDetail(actualData.expireKeysInfoSummary);
+	//加载门店台席健康度详情
+	loadChannelDeviceDetail(actualData.memoryInfoSummary);
+	//加载耗时步骤分析
+	loadTimeStepDetail(actualData.slowQueryAnalysisSummary);
+	//加载业务类型耗时详情
+	loadBusinessTypeTimeDetail(actualData.hotSpotDataInfoSummary);
+
 	
 }
 $(function(){
@@ -633,7 +629,7 @@ $(function(){
 	//加载页面数据
 	loadPageData();
 
-	setInterval(loadPageData,1000*30)
+	setInterval(loadPageData,1000)
 })
 
 function print() {

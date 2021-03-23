@@ -9,6 +9,8 @@ import java.util.List;
 @Builder
 public class TaskInfoSummary implements Serializable {
 
+    private List<String> times;
+
     private List<Integer> stringTaskCounts;
 
     private List<Integer> listTaskCounts;

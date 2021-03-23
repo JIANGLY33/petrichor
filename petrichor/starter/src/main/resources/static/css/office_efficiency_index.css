@@ -84,9 +84,9 @@
 .office-efficiency-index .col-info .content.base-info table td{width:25%;height:20px;}
 .content.base-info table td .channel-name{height:4rem;max-width:360px;color:#fff;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .content.base-info .integral-echart{height:9rem;}
-.content.base-info .ding-dan-bg{margin-left:50px;height:60px;max-width:85px;background: url("../images/ding-dan.png")no-repeat center center;background-size:50px 44px;}
-.content.base-info .ke-liu-bg{margin-left:50px;height:60px;max-width:85px;background: url("../images/ke-liu.png")no-repeat center center;background-size:50px 44px;}
-.content.base-info .pai-dui-ji-bg{margin-left:50px;height:60px;max-width:85px;background: url("../images/pai-dui-ji.png")no-repeat center center;background-size:33px 44px;}
+.content.base-info .ding-dan-bg{margin-left:60px;height:60px;max-width:85px;background: url("../images/ding-dan.png")no-repeat center center;background-size:50px 44px;}
+.content.base-info .ke-liu-bg{margin-left:60px;height:60px;max-width:85px;background: url("../images/ke-liu.png")no-repeat center center;background-size:50px 44px;}
+.content.base-info .pai-dui-ji-bg{margin-left:60px;height:60px;max-width:85px;background: url("../images/pai-dui-ji.png")no-repeat center center;background-size:33px 44px;}
 .content.base-info .liang-shu-zhi{height:3rem;line-height:3rem;vertical-align:middle;color:#00A8FE;text-align:center;font-size:25px;font-weight:600;}
 .content.base-info .td-shu-zhi{color:#fff;text-align:center;height:20px;}
 .content.base-info .channel-star-level{font-size:15px;color:#fff;padding-left:20px;}

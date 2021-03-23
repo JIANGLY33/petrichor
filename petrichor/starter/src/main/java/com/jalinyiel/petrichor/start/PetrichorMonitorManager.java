@@ -31,18 +31,43 @@ public class PetrichorMonitorManager {
     }
 
     public HotSpotDataInfoSummary collectHotSpotDataInfo() {
-        return null;
+        HotSpotDataInfoSummary hotSpotDataInfoSummary = HotSpotDataInfoSummary.builder()
+                .hotSpotKeys(ImmutableList.of())
+                .hotSpotMemories(ImmutableList.of())
+                .hotSpotQueryTimes(ImmutableList.of())
+                .build();
+        return hotSpotDataInfoSummary;
     }
 
     public MemoryInfoSummary collectMemoryInfo() {
-        return null;
+        MemoryInfoSummary memoryInfoSummary = MemoryInfoSummary.builder()
+                .setMemory(0)
+                .mapMemory(0)
+                .listMemory(0)
+                .stringMemory(0)
+                .sumMemoryCost(0)
+                .build();
+        return memoryInfoSummary;
     }
 
     public SlowQueryAnalysisSummary collectSlowQueryAnalysisInfo() {
-        return null;
+        SlowQueryAnalysisSummary slowQueryAnalysisSummary = SlowQueryAnalysisSummary.builder()
+                .tasks(ImmutableList.of())
+                .runTimes(ImmutableList.of())
+                .timeCost(ImmutableList.of())
+                .build();
+        return slowQueryAnalysisSummary;
     }
 
     public TaskInfoSummary collectTaskInfo() {
-        return null;
+
+        TaskInfoSummary taskInfoSummary = TaskInfoSummary.builder()
+                .mapTaskCount(ImmutableList.of())
+                .listTaskCounts(ImmutableList.of())
+                .stringTaskCounts(ImmutableList.of())
+                .setTaskCount(ImmutableList.of())
+                .times(ImmutableList.of())
+                .build();
+        return taskInfoSummary;
     }
 }

@@ -35,4 +35,9 @@ public class PetrichorObject {
     public PetrichorValue getPetrichorValue() {
         return petrichorValue;
     }
+
+    public int countIncre() {
+        count += 1;
+        return this.count;
+    }
 }

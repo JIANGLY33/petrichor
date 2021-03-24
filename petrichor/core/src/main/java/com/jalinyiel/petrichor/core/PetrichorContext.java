@@ -1,5 +1,6 @@
 package com.jalinyiel.petrichor.core;
 
+import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -47,5 +48,13 @@ public class PetrichorContext {
     public long getCurDbTaskNums() {
         PetrichorDb petrichorDb = petrichorDbs.get(currentDbId);
         return petrichorDb.getTaskCount().get();
+    }
+
+    public void updateTaskRecord(TaskType taskType, String key) {
+        PetrichorDb petrichorDb = this.getCurrentDb();
+        PetrichorDict petrichorDict = petrichorDb.getKeyValues();
+        petrichorDb.taskCountIncre();
+        petrichorDict.keyTaskIncre(key);
+        petrichorDb.dataTypeCountIncre(taskType);
     }
 }

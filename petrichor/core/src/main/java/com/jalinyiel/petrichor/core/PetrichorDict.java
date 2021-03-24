@@ -58,4 +58,11 @@ public class PetrichorDict {
         // 目前的做法是先检查key是否存在再delete，理论上永远不会走到这里
         return null;
     }
+
+    public int keyTaskIncre(String key) {
+        return this.dict.entrySet().stream().filter(entry -> {
+            PetrichorString petrichorString = (PetrichorString) entry.getKey().getPetrichorValue();
+            return petrichorString.getValue().equals(key);
+        }).map(entry -> entry.getKey().countIncre()).findAny().get();
+    }
 }

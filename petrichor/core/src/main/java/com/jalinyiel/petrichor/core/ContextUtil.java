@@ -1,12 +1,16 @@
 package com.jalinyiel.petrichor.core;
 
 import com.jalinyiel.petrichor.core.collect.PetrichorValue;
+import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 @Component
 public class ContextUtil<T> {
@@ -60,4 +64,19 @@ public class ContextUtil<T> {
         return duration.getSeconds();
     }
 
+    public void updateTaskRecord(TaskType taskType, String key) {
+        petrichorContext.updateTaskRecord(taskType,key);
+    }
+
+    public List<PetrichorObject> getHotSpotData() {
+        return petrichorContext.getCurrentDb().getHotSpotData();
+    }
+
+    public List<PetrichorObject> getExpireData() {
+        return petrichorContext.getCurrentDb().getExpireData();
+    }
+
+    public Map<TaskType, TreeMap<Integer,Long>> getDataTypeTaskCount() {
+        return petrichorContext.getCurrentDb().getDataTypeTaskCount();
+    }
 }

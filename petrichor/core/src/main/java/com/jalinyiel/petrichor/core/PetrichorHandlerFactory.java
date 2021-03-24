@@ -1,7 +1,6 @@
 package com.jalinyiel.petrichor.core;
 
 import com.jalinyiel.petrichor.core.handler.DataType;
-import com.jalinyiel.petrichor.core.handler.ListHandler;
 import com.jalinyiel.petrichor.core.handler.PetrichorHandler;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;

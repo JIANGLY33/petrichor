@@ -629,7 +629,7 @@ $(function(){
 	//加载页面数据
 	loadPageData();
 
-	setInterval(loadPageData,1000)
+	setInterval(loadPageData,1000*15)
 })
 
 function print() {

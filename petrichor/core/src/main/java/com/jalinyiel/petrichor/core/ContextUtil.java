@@ -76,7 +76,7 @@ public class ContextUtil<T> {
         return petrichorContext.getCurrentDb().getExpireData();
     }
 
-    public Map<TaskType, TreeMap<Integer,Long>> getDataTypeTaskCount() {
+    public Map<TaskType, TreeMap<String,Long>> getDataTypeTaskCount() {
         return petrichorContext.getCurrentDb().getDataTypeTaskCount();
     }
 }

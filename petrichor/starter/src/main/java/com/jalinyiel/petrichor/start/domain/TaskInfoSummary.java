@@ -11,12 +11,12 @@ public class TaskInfoSummary implements Serializable {
 
     private List<String> times;
 
-    private List<Integer> stringTaskCounts;
+    private List<Long> stringTaskCounts;
 
-    private List<Integer> listTaskCounts;
+    private List<Long> listTaskCounts;
 
-    private List<Integer> setTaskCount;
+    private List<Long> setTaskCount;
     
-    private List<Integer> mapTaskCount;
+    private List<Long> mapTaskCount;
 
 }

@@ -7,6 +7,7 @@ public enum SupportedOperation {
     KEY_EXIST("exist"),
     EXPIRE_KEY("expire"),
     TYPE_KEY("type"),
+    TIME_KEY("time"),
 
     /** String类型的命令 **/
     STRING_SET("set"),

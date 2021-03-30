@@ -72,9 +72,9 @@ public class PetrichorDb {
         Long count = value.get(key);
         value.put(key, null == count ? 1 : count + 1);
         if (value.size() > TASK_COUNTS_CAPACITY) value.pollFirstEntry();
-        value.entrySet().stream()
-                .forEach(integerLongEntry
-                        -> System.out.println(String.format("key is %s, value is %d", integerLongEntry.getKey(), integerLongEntry.getValue())));
+//        value.entrySet().stream()
+//                .forEach(integerLongEntry
+//                        -> System.out.println(String.format("key is %s, value is %d", integerLongEntry.getKey(), integerLongEntry.getValue())));
         return value.get(key);
     }
 

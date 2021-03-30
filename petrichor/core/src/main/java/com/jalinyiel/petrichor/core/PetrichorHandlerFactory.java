@@ -3,6 +3,7 @@ package com.jalinyiel.petrichor.core;
 import com.jalinyiel.petrichor.core.handler.DataType;
 import com.jalinyiel.petrichor.core.handler.PetrichorHandler;
 import com.jalinyiel.petrichor.core.task.TaskType;
+import com.jalinyiel.petrichor.core.util.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -35,4 +35,27 @@ public class GlobalCommand {
             return 33;
         }
     }
+
+    @Component
+    @Command(name = "time", mixinStandardHelpOptions = true,
+            exitCodeOnExecutionException = 34)
+    static class Time implements Callable<Integer> {
+
+        @Autowired
+        TaskListener taskListener;
+
+        @Parameters(index = "0", description = "key")
+        private String key;
+
+        @Override
+        public Integer call() {
+            Class[] paramClasses = {String.class};
+            Object[] params = {key};
+            ResponseResult responseResult =
+                    taskListener.process(
+                            PetrichorTask.of(SupportedOperation.TIME_KEY.getOpsName(), params, paramClasses, TaskType.GLOBAL_TASK));
+            System.out.println(responseResult.isSuccess() ? responseResult.getData() : responseResult.getMsg());
+            return 33;
+        }
+    }
 }

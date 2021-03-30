@@ -1,10 +1,13 @@
 package com.jalinyiel.petrichor.core.handler;
 
 import com.jalinyiel.petrichor.core.*;
+import com.jalinyiel.petrichor.core.check.CheckKey;
 import com.jalinyiel.petrichor.core.collect.PetrichorSet;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.ops.SetOps;
 import com.jalinyiel.petrichor.core.task.TaskType;
+import com.jalinyiel.petrichor.core.util.ContextUtil;
+import com.jalinyiel.petrichor.core.util.PetrichorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +47,7 @@ public class SetHandler extends PetrichorHandler implements SetOps {
     }
 
     @Override
+    @CheckKey
     public ResponseResult<Void> setRemove(String key, String... elements) {
         PetrichorSet petrichorSet = contextUtil.getValue(key);
         petrichorSet.remove(elements);
@@ -51,12 +55,14 @@ public class SetHandler extends PetrichorHandler implements SetOps {
     }
 
     @Override
+    @CheckKey
     public ResponseResult<Integer> setSize(String key) {
         PetrichorSet petrichorSet = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorSet.size());
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> setGet(String key) {
         PetrichorSet petrichorSet = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorSet.toString());

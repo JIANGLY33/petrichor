@@ -1,15 +1,16 @@
 package com.jalinyiel.petrichor.core.handler;
 
 import com.jalinyiel.petrichor.core.*;
+import com.jalinyiel.petrichor.core.check.CheckKey;
 import com.jalinyiel.petrichor.core.collect.PetrichorMap;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.ops.MapOps;
 import com.jalinyiel.petrichor.core.task.TaskType;
+import com.jalinyiel.petrichor.core.util.ContextUtil;
+import com.jalinyiel.petrichor.core.util.PetrichorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,24 +44,28 @@ public class MapHandler extends PetrichorHandler implements MapOps {
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> mapGet(String key, String filed) {
         PetrichorMap petrichorMap = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorMap.get(filed).orElse(""));
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> mapDelete(String key, String field) {
         PetrichorMap petrichorMap = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorMap.delete(field).orElse(""));
     }
 
     @Override
+    @CheckKey
     public ResponseResult<Integer> mapSize(String key) {
         PetrichorMap petrichorMap = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorMap.size());
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> mapKeys(String key) {
         PetrichorMap petrichorMap = contextUtil.getValue(key);
         String keys = petrichorMap.keys().stream().collect(Collectors.joining(","));
@@ -68,6 +73,7 @@ public class MapHandler extends PetrichorHandler implements MapOps {
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> mapValues(String key) {
         PetrichorMap petrichorMap = contextUtil.getValue(key);
         String values = petrichorMap.values().stream().collect(Collectors.joining(","));

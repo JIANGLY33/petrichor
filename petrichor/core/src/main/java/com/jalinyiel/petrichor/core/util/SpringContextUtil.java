@@ -1,4 +1,4 @@
-package com.jalinyiel.petrichor.core;
+package com.jalinyiel.petrichor.core.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

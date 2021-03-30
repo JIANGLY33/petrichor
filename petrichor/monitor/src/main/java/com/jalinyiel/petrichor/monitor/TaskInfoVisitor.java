@@ -1,7 +1,7 @@
 package com.jalinyiel.petrichor.monitor;
 
-import com.jalinyiel.petrichor.core.ContextUtil;
-import com.jalinyiel.petrichor.core.PetrichorUtil;
+import com.jalinyiel.petrichor.core.util.ContextUtil;
+import com.jalinyiel.petrichor.core.util.PetrichorUtil;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

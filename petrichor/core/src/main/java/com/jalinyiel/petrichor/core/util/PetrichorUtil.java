@@ -1,4 +1,7 @@
-package com.jalinyiel.petrichor.core;
+package com.jalinyiel.petrichor.core.util;
+
+import com.jalinyiel.petrichor.core.ObjectEncoding;
+import com.jalinyiel.petrichor.core.ObjectType;
 
 import java.time.LocalTime;
 

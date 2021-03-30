@@ -16,7 +16,8 @@ import java.util.concurrent.Callable;
         subcommands = {
                 StringCommand.Set.class,
                 StringCommand.Get.class,
-                StringCommand.MGet.class
+                StringCommand.MGet.class,
+                StringCommand.ESet.class
         }
 )
 public class StringCommand {
@@ -42,6 +43,35 @@ public class StringCommand {
             ResponseResult responseResult =
                     taskListener.process(
                             PetrichorTask.of(SupportedOperation.STRING_SET.getOpsName(), params, paramClasses, TaskType.STRING_TASK));
+            System.out.println(responseResult.isSuccess() ? "OK" : responseResult.getMsg());
+            return 33;
+        }
+    }
+
+    @Component
+    @Command(name = "eset", mixinStandardHelpOptions = true,
+            exitCodeOnExecutionException = 34, description = "set new string element with expire time whose unit is second")
+    static class ESet implements Callable<Integer> {
+
+        @Autowired
+        TaskListener taskListener;
+
+        @Parameters(index = "0", description = "key")
+        private String key;
+
+        @Parameters(index = "1", description = "value")
+        private String value;
+
+        @Parameters(index = "2", description = "expire time(seconds)")
+        private long expireTime;
+
+        @Override
+        public Integer call() {
+            Class[] paramClasses = {String.class, long.class, String.class};
+            Object[] params = {key, expireTime, value};
+            ResponseResult responseResult =
+                    taskListener.process(
+                            PetrichorTask.of(SupportedOperation.STRING_SET_SECONDS_EXPIRE.getOpsName(), params, paramClasses, TaskType.STRING_TASK));
             System.out.println(responseResult.isSuccess() ? "OK" : responseResult.getMsg());
             return 33;
         }

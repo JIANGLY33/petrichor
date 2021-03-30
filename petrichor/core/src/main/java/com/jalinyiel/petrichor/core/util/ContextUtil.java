@@ -1,6 +1,8 @@
-package com.jalinyiel.petrichor.core;
+package com.jalinyiel.petrichor.core.util;
 
+import com.jalinyiel.petrichor.core.*;
 import com.jalinyiel.petrichor.core.collect.PetrichorValue;
+import com.jalinyiel.petrichor.core.exception.KeyNotExistException;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 
 @Component
 public class ContextUtil<T> {
@@ -41,6 +44,39 @@ public class ContextUtil<T> {
         return dict;
     }
 
+    private ExpireDict getExpireDict() {
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        ExpireDict expireDict = petrichorDb.getExpireKeys();
+        return expireDict;
+    }
+
+    public long setExpire(PetrichorObject petrichorObject, long time) {
+        ExpireDict expireDict = this.getExpireDict();
+        return expireDict.put(petrichorObject, time);
+    }
+
+    public Optional<Long> getExpire(String key) {
+        ExpireDict expireDict = this.getExpireDict();
+        return expireDict.get(key);
+    }
+
+    /**
+     * 移除过期的键
+     * @param key
+     * @return 0:键尚未过期, -1:键未设置过期时间 其余正数表示键已经过期的时间
+     */
+    public long removeExpireKey(String key) {
+        ExpireDict expireDict = this.getExpireDict();
+        long t = expireDict.get(key).orElseThrow(KeyNotExistException::new);
+        Instant expireInstant = Instant.ofEpochSecond(t);
+        Duration duration = Duration.between(Instant.now(),expireInstant);
+        if (!duration.isNegative()) {
+            return 0L;
+        }
+        if(expireDict.remove(key) == -1) return -1;
+        return duration.abs().getSeconds();
+    }
+
     public long taskNumIncre() {
         return petrichorContext.curDbTaskIncre();
     }
@@ -48,7 +84,6 @@ public class ContextUtil<T> {
     public long getTaskNums() {
         return petrichorContext.getCurDbTaskNums();
     }
-
     public long getKeySize() {
         PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
         return petrichorDb.getKeyValues().size();

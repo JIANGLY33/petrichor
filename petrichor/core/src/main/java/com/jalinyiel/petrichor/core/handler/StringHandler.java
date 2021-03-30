@@ -1,16 +1,17 @@
 package com.jalinyiel.petrichor.core.handler;
 
 import com.jalinyiel.petrichor.core.*;
-import com.jalinyiel.petrichor.core.collect.PetrichorList;
+import com.jalinyiel.petrichor.core.check.CheckKey;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
-import com.jalinyiel.petrichor.core.collect.PetrichorValue;
 import com.jalinyiel.petrichor.core.ops.StringOps;
 import com.jalinyiel.petrichor.core.task.TaskType;
+import com.jalinyiel.petrichor.core.util.ContextUtil;
+import com.jalinyiel.petrichor.core.util.PetrichorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,6 +44,7 @@ public class StringHandler extends PetrichorHandler implements StringOps {
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> get(String key) {
         PetrichorString petrichorString = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorString.get());
@@ -50,7 +52,10 @@ public class StringHandler extends PetrichorHandler implements StringOps {
 
     @Override
     public ResponseResult<Void> setWithSecondsExpire(String key, long seconds, String value) {
-        return null;
+        this.set(key,value);
+        contextUtil.setExpire(PetrichorObjectFactory.of(VALUE_TYPE, VALUE_ENCODING,new PetrichorString(key)),
+                Instant.now().plusSeconds(seconds).getEpochSecond());
+        return ResponseResult.successResult(CommonResultCode.SUCCESS);
     }
 
     @Override

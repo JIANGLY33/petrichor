@@ -12,7 +12,8 @@ import java.util.concurrent.Callable;
         StringCommand.class,
         SetCommand.class,
         MapCommand.class,
-        GlobalCommand.Del.class
+        GlobalCommand.Del.class,
+        GlobalCommand.Time.class
 })
 public class RootCommand implements Callable<Integer> {
 

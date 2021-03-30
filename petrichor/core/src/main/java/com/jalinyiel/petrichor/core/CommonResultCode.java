@@ -15,7 +15,7 @@ public enum CommonResultCode implements AbsResultCode {
     TOKEN_NOT_VALID(107, "token无效"),
     WEBTYPE_NOT_VALID(108, "网页类型不合法（1：PC端网页，2：移动端网页）"),
     //签名相关
-    SING_TIME_NOT_VALID(1000, "请求时间戳不合法"),
+    EXPIRE(1000, "键已过期"),
     SING_KEY_NOT_VALID(1001, "accessKey不合法"),
     SING_ERROR(1003, "签名错误"),
     SING_TIMEOUT(1002, "请求超时"),

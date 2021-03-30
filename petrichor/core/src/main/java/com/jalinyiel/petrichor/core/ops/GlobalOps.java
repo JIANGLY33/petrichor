@@ -32,7 +32,17 @@ public interface GlobalOps {
      * @param seconds
      * @return
      */
-    ResponseResult<Integer> expire(String key, long seconds);
+    ResponseResult<Long> expire(String key, long seconds);
+
+    /**
+     * 检查键值对的过期时间
+     * 不同返回值的含义为：
+     * -正数:还有多少秒过期
+     * --1:不存在过期时间
+     * @param key
+     * @return
+     */
+    ResponseResult<Long> time(String key);
 
     /**
      * 检查指定键的值类型

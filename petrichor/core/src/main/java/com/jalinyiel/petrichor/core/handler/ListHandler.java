@@ -6,6 +6,8 @@ import com.jalinyiel.petrichor.core.collect.PetrichorList;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.ops.ListOps;
 import com.jalinyiel.petrichor.core.task.TaskType;
+import com.jalinyiel.petrichor.core.util.ContextUtil;
+import com.jalinyiel.petrichor.core.util.PetrichorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
@@ -57,6 +59,7 @@ public class ListHandler extends PetrichorHandler implements ListOps {
     }
 
     @Override
+    @CheckKey
     public ResponseResult<Void> listInsert(String key, boolean isBefore, int pivot, String value) {
         PetrichorList petrichorList = contextUtil.getValue(key);
         if (isBefore) petrichorList.insert(value, pivot);
@@ -65,12 +68,14 @@ public class ListHandler extends PetrichorHandler implements ListOps {
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> listIndex(String key, int index) {
         PetrichorList petrichorList = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.index(index));
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> listRange(String key, int start, int end) {
         PetrichorList petrichorList = contextUtil.getValue(key);
         String elements = petrichorList.range(start, end).stream().collect(Collectors.joining(","));
@@ -85,24 +90,28 @@ public class ListHandler extends PetrichorHandler implements ListOps {
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> leftPop(String key) {
         PetrichorList petrichorList = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.leftPop());
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> rightPop(String key) {
         PetrichorList petrichorList = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.rightPop());
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> listSet(String key, int index, String value) {
         PetrichorList petrichorList = contextUtil.getValue(key);
         return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.set(value, index));
     }
 
     @Override
+    @CheckKey
     public ResponseResult<String> listTrim(String key, int start, int end) {
         PetrichorList petrichorList = contextUtil.getValue(key);
         String elements = petrichorList.trim(start, end).stream().collect(Collectors.joining());

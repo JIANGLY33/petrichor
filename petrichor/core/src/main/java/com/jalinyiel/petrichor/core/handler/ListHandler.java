@@ -10,6 +10,8 @@ import com.jalinyiel.petrichor.core.util.ContextUtil;
 import com.jalinyiel.petrichor.core.util.PetrichorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,8 +38,11 @@ public class ListHandler extends PetrichorHandler implements ListOps {
             dict.put(PetrichorObjectFactory.of(PetrichorUtil.KEY_TYPE, PetrichorUtil.KEY_ENCODING, new PetrichorString(key)),
                     PetrichorObjectFactory.of(VALUE_TYPE, VALUE_ENCODING, value));
         } else {
-            PetrichorList petrichorList = contextUtil.getValue(key);
-            petrichorList.rightPush(values);
+            Optional<PetrichorList> optionalList = this.getValue(key);
+            if(!optionalList.isPresent()){
+                return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+            }
+            optionalList.get().rightPush(values);
         }
         return ResponseResult.successResult(CommonResultCode.SUCCESS);
     }
@@ -52,8 +57,11 @@ public class ListHandler extends PetrichorHandler implements ListOps {
             dict.put(PetrichorObjectFactory.of(PetrichorUtil.KEY_TYPE, PetrichorUtil.KEY_ENCODING, new PetrichorString(key)),
                     PetrichorObjectFactory.of(VALUE_TYPE, VALUE_ENCODING, value));
         } else {
-            PetrichorList petrichorList = contextUtil.getValue(key);
-            petrichorList.leftPush(values);
+            Optional<PetrichorList> optionalList = this.getValue(key);
+            if(!optionalList.isPresent()){
+                return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+            }
+            optionalList.get().leftPush(values);
         }
         return ResponseResult.successResult(CommonResultCode.SUCCESS);
     }
@@ -61,61 +69,94 @@ public class ListHandler extends PetrichorHandler implements ListOps {
     @Override
     @CheckKey
     public ResponseResult<Void> listInsert(String key, boolean isBefore, int pivot, String value) {
-        PetrichorList petrichorList = contextUtil.getValue(key);
-        if (isBefore) petrichorList.insert(value, pivot);
-        else petrichorList.insert(value, pivot + 1);
+        Optional<PetrichorList> optionalList = this.getValue(key);
+        if(!optionalList.isPresent()){
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+        }
+        if (isBefore) optionalList.get().insert(value, pivot);
+        else optionalList.get().insert(value, pivot + 1);
         return ResponseResult.successResult(CommonResultCode.SUCCESS);
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> listIndex(String key, int index) {
-        PetrichorList petrichorList = contextUtil.getValue(key);
-        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.index(index));
+        Optional<PetrichorList> optionalList = this.getValue(key);
+        if(!optionalList.isPresent()){
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+        }
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, optionalList.get().index(index));
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> listRange(String key, int start, int end) {
-        PetrichorList petrichorList = contextUtil.getValue(key);
-        String elements = petrichorList.range(start, end).stream().collect(Collectors.joining(","));
+        Optional<PetrichorList> optionalList = this.getValue(key);
+        if(!optionalList.isPresent()){
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+        }
+        String elements = optionalList.get().range(start, end).stream().collect(Collectors.joining(","));
         return ResponseResult.successResult(CommonResultCode.SUCCESS, String.format("[%s]",elements));
     }
 
     @Override
     @CheckKey
     public ResponseResult<Integer> listLength(String key) {
-        PetrichorList petrichorList = contextUtil.getValue(key);
-        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.size());
+        Optional<PetrichorList> optionalList = this.getValue(key);
+        if(!optionalList.isPresent()){
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+        }
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, optionalList.get().size());
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> leftPop(String key) {
-        PetrichorList petrichorList = contextUtil.getValue(key);
-        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.leftPop());
+        Optional<PetrichorList> optionalList = this.getValue(key);
+        if(!optionalList.isPresent()){
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+        }
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, optionalList.get().leftPop());
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> rightPop(String key) {
-        PetrichorList petrichorList = contextUtil.getValue(key);
-        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.rightPop());
+        Optional<PetrichorList> optionalList = this.getValue(key);
+        if(!optionalList.isPresent()){
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+        }
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, optionalList.get().rightPop());
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> listSet(String key, int index, String value) {
-        PetrichorList petrichorList = contextUtil.getValue(key);
-        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorList.set(value, index));
+        Optional<PetrichorList> optionalList = this.getValue(key);
+        if(!optionalList.isPresent()){
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+        }
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, optionalList.get().set(value, index));
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> listTrim(String key, int start, int end) {
-        PetrichorList petrichorList = contextUtil.getValue(key);
-        String elements = petrichorList.trim(start, end).stream().collect(Collectors.joining());
+        Optional<PetrichorList> optionalList = this.getValue(key);
+        if(!optionalList.isPresent()){
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
+        }
+        String elements = optionalList.get().trim(start, end).stream().collect(Collectors.joining());
         return ResponseResult.successResult(CommonResultCode.SUCCESS, String.format("[%s]",elements));
+    }
+
+    private Optional<PetrichorList> getValue(String key) {
+        try {
+            PetrichorList petrichorList = contextUtil.getValue(key);
+            return Optional.of(petrichorList);
+        } catch (ClassCastException classCastException) {
+            return Optional.empty();
+        }
     }
 
 }

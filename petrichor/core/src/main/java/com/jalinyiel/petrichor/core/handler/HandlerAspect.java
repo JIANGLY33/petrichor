@@ -56,7 +56,6 @@ public class HandlerAspect {
     public void mapTasks() {
     }
 
-
     @Around("requiredKeyFunc()")
     public ResponseResult checkKey(ProceedingJoinPoint pjp) throws Throwable {
         //从方法签名的实参中取出key

@@ -11,6 +11,7 @@ import com.jalinyiel.petrichor.core.util.PetrichorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,8 +38,11 @@ public class MapHandler extends PetrichorHandler implements MapOps {
             dict.put(PetrichorObjectFactory.of(PetrichorUtil.KEY_TYPE, PetrichorUtil.KEY_ENCODING, new PetrichorString(key)),
                     PetrichorObjectFactory.of(VALUE_TYPE, VALUE_ENCODING, petrichorMap));
         } else {
-            PetrichorMap petrichorMap = contextUtil.getValue(key);
-            petrichorMap.put(entryKey, entryValue);
+            Optional<PetrichorMap> optionalMap = this.getValue(key);
+            if (!optionalMap.isPresent()) {
+                return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR, "key type isn't map!");
+            }
+            optionalMap.get().put(entryKey, entryValue);
         }
         return ResponseResult.successResult(CommonResultCode.SUCCESS);
     }
@@ -46,37 +50,61 @@ public class MapHandler extends PetrichorHandler implements MapOps {
     @Override
     @CheckKey
     public ResponseResult<String> mapGet(String key, String filed) {
-        PetrichorMap petrichorMap = contextUtil.getValue(key);
-        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorMap.get(filed).orElse(""));
+        Optional<PetrichorMap> optionalMap = this.getValue(key);
+        if (!optionalMap.isPresent()) {
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR, "key type isn't map!");
+        }
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, optionalMap.get().get(filed).orElse(""));
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> mapDelete(String key, String field) {
-        PetrichorMap petrichorMap = contextUtil.getValue(key);
-        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorMap.delete(field).orElse(""));
+        Optional<PetrichorMap> optionalMap = this.getValue(key);
+        if (!optionalMap.isPresent()) {
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR, "key type isn't map!");
+        }
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, optionalMap.get().delete(field).orElse(""));
     }
 
     @Override
     @CheckKey
     public ResponseResult<Integer> mapSize(String key) {
-        PetrichorMap petrichorMap = contextUtil.getValue(key);
-        return ResponseResult.successResult(CommonResultCode.SUCCESS, petrichorMap.size());
+        Optional<PetrichorMap> optionalMap = this.getValue(key);
+        if (!optionalMap.isPresent()) {
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR, "key type isn't map!");
+        }
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, optionalMap.get().size());
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> mapKeys(String key) {
-        PetrichorMap petrichorMap = contextUtil.getValue(key);
-        String keys = petrichorMap.keys().stream().collect(Collectors.joining(","));
+        Optional<PetrichorMap> optionalMap = this.getValue(key);
+        if (!optionalMap.isPresent()) {
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR, "key type isn't map!");
+        }
+        String keys = optionalMap.get().keys().stream().collect(Collectors.joining(","));
         return ResponseResult.successResult(CommonResultCode.SUCCESS, String.format("(%s)", keys));
     }
 
     @Override
     @CheckKey
     public ResponseResult<String> mapValues(String key) {
-        PetrichorMap petrichorMap = contextUtil.getValue(key);
-        String values = petrichorMap.values().stream().collect(Collectors.joining(","));
+        Optional<PetrichorMap> optionalMap = this.getValue(key);
+        if (!optionalMap.isPresent()) {
+            return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR, "key type isn't map!");
+        }
+        String values = optionalMap.get().values().stream().collect(Collectors.joining(","));
         return ResponseResult.successResult(CommonResultCode.SUCCESS, String.format("[%s]", values));
+    }
+
+    private Optional<PetrichorMap> getValue(String key) {
+        try {
+            PetrichorMap petrichorMap = contextUtil.getValue(key);
+            return Optional.of(petrichorMap);
+        } catch (ClassCastException classCastException) {
+            return Optional.empty();
+        }
     }
 }

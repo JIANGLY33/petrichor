@@ -7,7 +7,7 @@ public enum CommonResultCode implements AbsResultCode {
     FAILED(100, "failed"),
     EXCEPTION(101, "exception"),
     NULL_RESULT(102, "result is null"),
-    ARGUMENT_ERROR(103, "argument error"),
+    TYPE_ERROR(103, "type error"),
     UNAUTHORIZED(104, "unauthorized"),
     TIMEOUT(105, "timeout"),
     FASTVALIDATOR_ERROR(106, "fastvalidator error"),

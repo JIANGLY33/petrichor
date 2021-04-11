@@ -3,7 +3,8 @@ package com.jalinyiel.petrichor.core;
 import com.jalinyiel.petrichor.core.collect.PetrichorValue;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode
+import java.util.Objects;
+
 public class PetrichorObject {
 
     private final ObjectType type;
@@ -39,5 +40,22 @@ public class PetrichorObject {
     public int countIncre() {
         count += 1;
         return this.count;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PetrichorObject that = (PetrichorObject) o;
+        return type == that.type && encoding == that.encoding && petrichorValue.equals(that.petrichorValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, encoding, petrichorValue);
     }
 }

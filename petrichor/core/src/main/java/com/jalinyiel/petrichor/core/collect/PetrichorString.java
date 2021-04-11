@@ -1,5 +1,8 @@
 package com.jalinyiel.petrichor.core.collect;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class PetrichorString implements PetrichorValue{
 
     private static final long serialVersionUID = -3400552608733185473L;

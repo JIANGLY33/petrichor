@@ -195,7 +195,7 @@ function loadStaffHandleDetail(data){
 		var tr1=[
 			'<tr class="td-avg-time">',
 			'<td colspan="3">',
-					'<div class="index '+indexClass+'">'+expireDataInfo[i].index+'</div>',
+					'<div class="index '+indexClass+'">'+i+'</div>',
 					'<div class="staff-name">'+expireDataInfo[i].keyName+'</div>',
 				'</td>',
 			'</tr>',
@@ -207,7 +207,7 @@ function loadStaffHandleDetail(data){
 				'</td>',
 				'<td>',
 					'<div class="staff-order-count">',
-					    '<span style="font-size:15px;">访问次数</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i].visitNum+' 次</span>',
+					    '<span style="font-size:15px;">访问次数</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i].visitTimes+' 次</span>',
 					'</div>',
 				'</td>',
 				'<td>',
@@ -224,14 +224,14 @@ function loadStaffHandleDetail(data){
 			'</tr> ',
 		];
 		var tr2=[];
-		if(i < expireDataInfo.length){
+		if(i+1< expireDataInfo.length){
 			index++;
 			var indexClass=(2==index)?"second":"";
 			tr2=[
 				'<tr><td colspan="3"><div class="split-line"></div></td></tr>',
 				'<tr class="td-avg-time">',
 				'<td colspan="3">',
-						'<div class="index '+indexClass+'">'+expireDataInfo[i+1].index+'</div>',
+						'<div class="index '+indexClass+'">'+i+'</div>',
 						'<div class="staff-name">'+expireDataInfo[i+1].keyName+'</div>',
 					'</td>',
 				'</tr>',
@@ -243,7 +243,7 @@ function loadStaffHandleDetail(data){
 					'</td>',
 					'<td>',
 						'<div class="staff-order-count">',
-							'<span style="font-size:15px;">访问次数</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i+1].visitNum+' 次</span>',
+							'<span style="font-size:15px;">访问次数</span><br/><span style="color:#00A8FE;font-size:18px;font-weight:600;">'+expireDataInfo[i+1].visitTimes+' 次</span>',
 						'</div>',
 					'</td>',
 					'<td>',

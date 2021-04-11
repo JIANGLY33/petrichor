@@ -1,4 +1,4 @@
-package com.jalinyiel.petrichor.start.domain;
+package com.jalinyiel.petrichor.domain;
 
 import lombok.Builder;
 import lombok.Data;

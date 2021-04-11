@@ -1,6 +1,10 @@
 package com.jalinyiel.petrichor.core;
 
+import com.jalinyiel.petrichor.core.collect.PetrichorEntry;
+import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.task.TaskType;
+
+import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -12,21 +16,23 @@ public class PetrichorDb {
 
     private PetrichorDict keyValues;
 
+    //存在过期时间的键
     private ExpireDict expireKeys;
 
     private AtomicLong taskCount;
 
     private List<PetrichorObject> hotSpotData;
 
-    private List<PetrichorObject> expireData;
+    //已经过期的键
+    private List<Map.Entry<PetrichorObject, PetrichorExpireInfo>> expireData;
 
     private Map<TaskType, TreeMap<String, Long>> dataTypeTaskCount;
 
-    private int HOT_SPOT_DATA_CAPACITY = 10;
+    public final int HOT_SPOT_DATA_CAPACITY = 10;
 
-    private int EXPIRE_KEY_CAPACITY = 10;
+    public final int EXPIRE_KEY_CAPACITY = 10;
 
-    private int TASK_COUNTS_CAPACITY = 10;
+    public final int TASK_COUNTS_CAPACITY = 10;
 
     public PetrichorDb(int id, PetrichorDict keyValues, ExpireDict expireKeys) {
         this.id = id;
@@ -79,10 +85,11 @@ public class PetrichorDb {
     }
 
     public List<PetrichorObject> getHotSpotData() {
-        return hotSpotData;
+        List<PetrichorObject> petrichorObjects = this.hotSpotData;
+        return petrichorObjects;
     }
 
-    public List<PetrichorObject> getExpireData() {
+    public List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> getExpireData() {
         return expireData;
     }
 
@@ -94,5 +101,39 @@ public class PetrichorDb {
         LocalTime localTime1 = LocalTime.parse(t1);
         LocalTime localTime2 = LocalTime.parse(t2);
         return localTime1.compareTo(localTime2);
+    }
+
+    public void setHotSpotData(List<PetrichorObject> hotSpotData) {
+        this.hotSpotData = hotSpotData;
+    }
+
+    public void setExpireData(List<Map.Entry<PetrichorObject, PetrichorExpireInfo>> expireData) {
+        this.expireData = expireData;
+    }
+
+    public List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> removeExpire() {
+        Map<PetrichorObject, PetrichorObject> keyValues = getKeyValues().getDict();
+        Iterator<Map.Entry<PetrichorObject,PetrichorObject>> iterator = keyValues.entrySet().iterator();
+        List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> res = new LinkedList<>();
+        while(iterator.hasNext()) {
+            Map.Entry<PetrichorObject,PetrichorObject> entry = iterator.next();
+            PetrichorObject key = entry.getKey();
+            Optional<Long> expireTime = expireKeys.get(key);
+            if (expireTime.isPresent() && expireTime.get() <= Instant.now().getEpochSecond()) {
+                res.add(new PetrichorEntry<>(key,new PetrichorExpireInfo(keyValues.get(key),expireTime.get())));
+                iterator.remove();
+                expireKeys.remove(key);
+            }
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        PetrichorObject p = PetrichorObjectFactory.of(ObjectType.PETRICHOR_STRING,ObjectEncoding.RAW_STRING, new PetrichorString("a"));
+        HashMap<PetrichorObject,Long> h  = new HashMap<>();
+        h.put(p,12L);
+        PetrichorObject q = PetrichorObjectFactory.of(ObjectType.PETRICHOR_STRING,ObjectEncoding.RAW_STRING, new PetrichorString("a"));
+        Long l = h.get(q);
+        System.out.println(q.equals(p));
     }
 }

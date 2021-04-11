@@ -1,8 +1,8 @@
 package com.jalinyiel.petrichor.core.handler;
 
-import com.jalinyiel.petrichor.core.CommonResultCode;
+import com.jalinyiel.petrichor.core.*;
+import com.jalinyiel.petrichor.core.collect.PetrichorList;
 import com.jalinyiel.petrichor.core.util.ContextUtil;
-import com.jalinyiel.petrichor.core.ResponseResult;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -16,7 +16,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.List;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Aspect
@@ -103,49 +106,73 @@ public class HandlerAspect {
 
     @After("listTasks()")
     public void listTaskCount(JoinPoint joinPoint) {
-        long taskNums = contextUtil.taskNumIncre();
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] paramNames = methodSignature.getParameterNames();
         int keyIndex = IntStream.range(0, paramNames.length)
                 .filter(i -> PARAM_NAME_OF_KEY.equals(paramNames[i])).findAny().getAsInt();
         Object[] args = joinPoint.getArgs();
         String key = (String) args[keyIndex];
+        updateHotSpotStatistics(key);
         contextUtil.updateTaskRecord(TaskType.LIST_TASK, key);
     }
 
     @After("stringTasks()")
     public void stringTaskCount(JoinPoint joinPoint) {
-        long taskNums = contextUtil.taskNumIncre();
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] paramNames = methodSignature.getParameterNames();
         int keyIndex = IntStream.range(0, paramNames.length)
                 .filter(i -> PARAM_NAME_OF_KEY.equals(paramNames[i])).findAny().getAsInt();
         Object[] args = joinPoint.getArgs();
         String key = (String) args[keyIndex];
+        updateHotSpotStatistics(key);
         contextUtil.updateTaskRecord(TaskType.STRING_TASK, key);
     }
 
     @After("setTasks()")
     public void setTaskCount(JoinPoint joinPoint) {
-        long taskNums = contextUtil.taskNumIncre();
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] paramNames = methodSignature.getParameterNames();
         int keyIndex = IntStream.range(0, paramNames.length)
                 .filter(i -> PARAM_NAME_OF_KEY.equals(paramNames[i])).findAny().getAsInt();
         Object[] args = joinPoint.getArgs();
         String key = (String) args[keyIndex];
+        updateHotSpotStatistics(key);
         contextUtil.updateTaskRecord(TaskType.SET_TASK, key);
     }
 
     @After("mapTasks()")
     public void mapTaskCount(JoinPoint joinPoint) {
-        long taskNums = contextUtil.taskNumIncre();
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] paramNames = methodSignature.getParameterNames();
         int keyIndex = IntStream.range(0, paramNames.length)
                 .filter(i -> PARAM_NAME_OF_KEY.equals(paramNames[i])).findAny().getAsInt();
         Object[] args = joinPoint.getArgs();
         String key = (String) args[keyIndex];
+        updateHotSpotStatistics(key);
         contextUtil.updateTaskRecord(TaskType.MAP_TASK, key);
+    }
+
+//    private void updateExpireStatistics(String key) {
+//        TreeMap<PetrichorObject, Long> expireStatistics = contextUtil.getExpireList();
+//        PetrichorObject keyObject = contextUtil.getKey(key);
+//        if(expireStatistics.size() >= contextUtil.getExpireCapacity()) {
+//            expireStatistics.stream();
+//        }
+//        expireStatistics.add(keyObject);
+//    }
+
+    private void updateHotSpotStatistics(String key) {
+        List<PetrichorObject> hotSpotStatistics = contextUtil.getHotSpotData();
+        PetrichorObject keyObject = contextUtil.getKey(key);
+        hotSpotStatistics.add(keyObject);
+        if(hotSpotStatistics.size() >= contextUtil.getExpireCapacity()) {
+           hotSpotStatistics = hotSpotStatistics.stream().sorted(this::compareHotSpotData)
+                    .limit(contextUtil.getHotSpotCapacity()).collect(Collectors.toList());
+        }
+        contextUtil.replaceHotSpotStatistics(hotSpotStatistics);
+    }
+
+    private int compareHotSpotData(PetrichorObject p1, PetrichorObject p2) {
+        return p1.getCount()-p2.getCount();
     }
 }

@@ -2,10 +2,8 @@ package com.jalinyiel.petrichor.core;
 
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
 
 public class PetrichorDict {
 
@@ -21,6 +19,13 @@ public class PetrichorDict {
 
     public PetrichorDict() {
         this.dict = new HashMap<>();
+    }
+
+    public Optional<PetrichorObject> getKey(String key) {
+        return this.dict.entrySet().stream().filter(entry -> {
+            PetrichorString petrichorString = (PetrichorString) entry.getKey().getPetrichorValue();
+            return petrichorString.getValue().equals(key);
+        }).map(Map.Entry::getKey).findAny();
     }
 
     public Optional<PetrichorObject> getByKey(String key) {
@@ -65,4 +70,9 @@ public class PetrichorDict {
             return petrichorString.getValue().equals(key);
         }).map(entry -> entry.getKey().countIncre()).findAny().get();
     }
+
+    public Map<PetrichorObject,PetrichorObject> getDict() {
+        return dict;
+    }
+
 }

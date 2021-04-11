@@ -1,5 +1,6 @@
 package com.jalinyiel.petrichor.start.domain;
 
+import com.jalinyiel.petrichor.domain.ExpireKeysInfo;
 import lombok.Data;
 
 import java.io.Serializable;

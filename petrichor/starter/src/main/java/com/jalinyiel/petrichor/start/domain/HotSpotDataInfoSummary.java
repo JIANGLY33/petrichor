@@ -11,10 +11,10 @@ import java.util.List;
 @Builder
 public class HotSpotDataInfoSummary implements Serializable {
 
-    List<Double> hotSpotMemories;
+    List<Long> hotSpotMemories;
 
     List<String> hotSpotKeys;
 
-    List<Integer> hotSpotQueryTimes;
+    List<Long> hotSpotQueryTimes;
 
 }

@@ -3,7 +3,6 @@ package com.jalinyiel.petrichor.core;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.LinkedList;

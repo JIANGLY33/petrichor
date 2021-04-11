@@ -1,11 +1,8 @@
 package com.jalinyiel.petrichor.core;
 
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
 
 public class ExpireDict {
     private HashMap<PetrichorObject, Long> dict;
@@ -34,6 +31,10 @@ public class ExpireDict {
         }).findAny().map(Map.Entry::getValue);
     }
 
+    public Optional<Long> get(PetrichorObject petrichorObject) {
+        return Optional.ofNullable(this.dict.get(petrichorObject));
+    }
+
     public long remove(String key) {
         Iterator<Map.Entry<PetrichorObject, Long>> iterator = dict.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -45,5 +46,27 @@ public class ExpireDict {
             }
         }
         return -1L;
+    }
+
+    public long remove(PetrichorObject petrichorObject) {
+        return this.dict.remove(petrichorObject);
+    }
+
+    public List<Map.Entry<PetrichorObject,Long>> removeExpire() {
+        Iterator<Map.Entry<PetrichorObject,Long>> iterator = dict.entrySet().iterator();
+        List<Map.Entry<PetrichorObject,Long>> res = new LinkedList<>();
+        while(iterator.hasNext()) {
+            Map.Entry<PetrichorObject,Long> entry = iterator.next();
+            long expireTime = entry.getValue();
+            if (expireTime <= Instant.now().getEpochSecond()) {
+                res.add(entry);
+                iterator.remove();
+            }
+        }
+        return res;
+    }
+
+    public HashMap<PetrichorObject, Long> getDict() {
+        return dict;
     }
 }

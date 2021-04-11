@@ -1,19 +1,20 @@
 package com.jalinyiel.petrichor.core.util;
 
 import com.jalinyiel.petrichor.core.*;
+import com.jalinyiel.petrichor.core.collect.PetrichorEntry;
+import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.collect.PetrichorValue;
 import com.jalinyiel.petrichor.core.exception.KeyNotExistException;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Component
 public class ContextUtil<T> {
@@ -26,6 +27,11 @@ public class ContextUtil<T> {
         Optional<PetrichorObject> petrichorValue = dict.getByKey(key);
         T petrichorList = (T) petrichorValue.get().getPetrichorValue();
         return petrichorList;
+    }
+
+    public PetrichorObject getKey(String key) {
+        PetrichorDict petrichorDict = getDataDict();
+        return petrichorDict.getKey(key).orElseThrow(KeyNotExistException::new);
     }
 
     public boolean keyExist(String key) {
@@ -74,7 +80,32 @@ public class ContextUtil<T> {
             return 0L;
         }
         if(expireDict.remove(key) == -1) return -1;
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        PetrichorDict petrichorDict = petrichorDb.getKeyValues();
+        petrichorDict.delete(key);
+        //键过期后更新统计数据
+        updateExpireList(key);
         return duration.abs().getSeconds();
+    }
+
+    /**
+     * 更新过期键的统计信息
+     * @param key
+     */
+    private void updateExpireList(String key) {
+        List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> expireStatistics = this.getExpireData();
+        if (expireStatistics.size() >= getExpireCapacity()) {
+            expireStatistics = expireStatistics.stream().sorted(
+                    (e1, e2)-> e1.getValue().getExpireTime().intValue() - e2.getValue().getExpireTime().intValue()
+            ).collect(Collectors.toList());
+            expireStatistics.remove(0);
+        } else {
+            PetrichorObject petrichorKey = this.getKey(key);
+            Map.Entry<PetrichorObject,PetrichorExpireInfo> e = new PetrichorEntry<>(petrichorKey,
+                    new PetrichorExpireInfo(this.getValue(key),Instant.now().getEpochSecond()));
+            expireStatistics.add(e);
+        }
+        replaceExpireStatistics(expireStatistics);
     }
 
     public long taskNumIncre() {
@@ -107,11 +138,51 @@ public class ContextUtil<T> {
         return petrichorContext.getCurrentDb().getHotSpotData();
     }
 
-    public List<PetrichorObject> getExpireData() {
+    public List<Map.Entry<PetrichorObject, PetrichorExpireInfo>> getExpireData() {
         return petrichorContext.getCurrentDb().getExpireData();
     }
 
     public Map<TaskType, TreeMap<String,Long>> getDataTypeTaskCount() {
         return petrichorContext.getCurrentDb().getDataTypeTaskCount();
+    }
+
+    public int getHotSpotCapacity() {
+        return petrichorContext.getCurrentDb().HOT_SPOT_DATA_CAPACITY;
+    }
+
+    public int getExpireCapacity() {
+        return petrichorContext.getCurrentDb().EXPIRE_KEY_CAPACITY;
+    }
+
+    public int getTaskCountCapacity() {
+        return petrichorContext.getCurrentDb().TASK_COUNTS_CAPACITY;
+    }
+
+    public void replaceExpireStatistics(List<Map.Entry<PetrichorObject, PetrichorExpireInfo>> expireStatistics) {
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        petrichorDb.setExpireData(expireStatistics);
+    }
+
+    public void replaceHotSpotStatistics(List<PetrichorObject> hotSpotStatistics) {
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        petrichorDb.setHotSpotData(hotSpotStatistics);
+    }
+
+    public Optional<PetrichorObject> getValueIncludeExpire(String key) {
+        PetrichorDict dict = getDataDict();
+        Optional<PetrichorObject> petrichorValue = dict.getByKey(key);
+        if (petrichorValue.isPresent()) {
+            return petrichorValue;
+        }
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> expireData = petrichorDb.getExpireData();
+        Optional<PetrichorExpireInfo> hitData = expireData.stream().filter(e -> {
+            PetrichorString keyStr = (PetrichorString) e.getKey().getPetrichorValue();
+            return keyStr.equals(key);
+        }).map(Map.Entry::getValue).findAny();
+        if (hitData.isPresent()) {
+            return Optional.of(hitData.get().getValue());
+        }
+        return Optional.empty();
     }
 }

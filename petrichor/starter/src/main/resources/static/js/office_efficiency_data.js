@@ -80,7 +80,7 @@ var data = {
                 "staffName": "金志慧",
                 "type": "List",
                 "keyName": "jalinyiel",
-                "visitNum": "100",
+                "visitTimes": "100",
                 "memory": "12.1",
                 "expireTime": "2021-3-1 12:00:00"
             },
@@ -92,7 +92,7 @@ var data = {
                 "staffName": "李春君",
                 "type": "List",
                 "keyName": "jalinyiel",
-                "visitNum": "100",
+                "visitTimes": "100",
                 "memory": "12.1",
                 "expireTime": "2021-3-1 12:00:00"
             }, {
@@ -103,7 +103,7 @@ var data = {
                 "staffName": "冷静",
                 "type": "List",
                 "keyName": "jalinyiel",
-                "visitNum": "100",
+                "visitTimes": "100",
                 "memory": "12.1",
                 "expireTime": "2021-3-1 12:00:00"
             },
@@ -115,7 +115,7 @@ var data = {
                 "staffName": "郑芳",
                 "type": "List",
                 "keyName": "jalinyiel",
-                "visitNum": "100",
+                "visitTimes": "100",
                 "memory": "12.1",
                 "expireTime": "2021-3-1 12:00:00"
             }

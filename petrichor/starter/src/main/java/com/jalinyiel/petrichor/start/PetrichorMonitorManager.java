@@ -2,6 +2,7 @@ package com.jalinyiel.petrichor.start;
 
 import com.google.common.collect.ImmutableList;
 import com.jalinyiel.petrichor.core.task.TaskType;
+import com.jalinyiel.petrichor.domain.ExpireKeysInfo;
 import com.jalinyiel.petrichor.monitor.*;
 import com.jalinyiel.petrichor.start.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,15 +49,15 @@ public class PetrichorMonitorManager {
 
 
     public ExpireKeysInfoSummary collectExpireKeysInfo() {
-        List<ExpireKeysInfo> expireKeysInfos = ImmutableList.of();
+        List<ExpireKeysInfo> expireKeysInfos = expireKeyInfoVisitor.getExpireKeyInfos();
         return new ExpireKeysInfoSummary(expireKeysInfos);
     }
 
     public HotSpotDataInfoSummary collectHotSpotDataInfo() {
         HotSpotDataInfoSummary hotSpotDataInfoSummary = HotSpotDataInfoSummary.builder()
-                .hotSpotKeys(ImmutableList.of())
-                .hotSpotMemories(ImmutableList.of())
-                .hotSpotQueryTimes(ImmutableList.of())
+                .hotSpotKeys(hotSpotInfoVisitor.getKeys())
+                .hotSpotMemories(hotSpotInfoVisitor.getMemories())
+                .hotSpotQueryTimes(hotSpotInfoVisitor.getQueryTimes())
                 .build();
         return hotSpotDataInfoSummary;
     }

@@ -10,11 +10,13 @@ import java.util.List;
 @Builder
 public class SlowQueryAnalysisSummary implements Serializable {
 
-    List<Double> timeCost;
+    private static final long serialVersionUID = -5343609562921277382L;
+
+    List<Long> timeCost;
 
     List<String> tasks;
 
-    List<Double> runTimes;
+    List<Integer> runTimes;
 
 
 }

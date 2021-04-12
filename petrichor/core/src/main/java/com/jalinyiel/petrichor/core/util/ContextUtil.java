@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -158,7 +155,7 @@ public class ContextUtil<T> {
         return petrichorContext.getCurrentDb().TASK_COUNTS_CAPACITY;
     }
 
-    public void replaceExpireStatistics(List<Map.Entry<PetrichorObject, PetrichorExpireInfo>> expireStatistics) {
+    private void replaceExpireStatistics(List<Map.Entry<PetrichorObject, PetrichorExpireInfo>> expireStatistics) {
         PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
         petrichorDb.setExpireData(expireStatistics);
     }
@@ -184,5 +181,20 @@ public class ContextUtil<T> {
             return Optional.of(hitData.get().getValue());
         }
         return Optional.empty();
+    }
+
+    public void updateSlowQueryStatistic(String key, Duration duration) {
+        PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
+        Map<PetrichorObject, Duration> slowQueryStatistic = petrichorDb.getSlowQueryStatistic();
+        PetrichorObject petrichorObject = this.getKey(key);
+        if (petrichorDb.SLOW_QUERY_CAPACITY <= slowQueryStatistic.size()) {
+            slowQueryStatistic = slowQueryStatistic.entrySet().stream().sorted(Comparator.comparing(entry -> entry.getValue().toMillis()))
+                    .limit(petrichorDb.SLOW_QUERY_CAPACITY-1).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
+        slowQueryStatistic.put(petrichorObject,duration);
+    }
+
+    public Map<PetrichorObject, Duration> getSlowQueryStatistic() {
+        return petrichorContext.getCurrentDb().getSlowQueryStatistic();
     }
 }

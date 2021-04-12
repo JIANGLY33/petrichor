@@ -1,7 +1,6 @@
 package com.jalinyiel.petrichor.core.handler;
 
 import com.jalinyiel.petrichor.core.*;
-import com.jalinyiel.petrichor.core.collect.PetrichorList;
 import com.jalinyiel.petrichor.core.util.ContextUtil;
 import com.jalinyiel.petrichor.core.task.TaskType;
 import lombok.extern.slf4j.Slf4j;
@@ -11,14 +10,10 @@ import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -149,6 +144,23 @@ public class HandlerAspect {
         String key = (String) args[keyIndex];
         updateHotSpotStatistics(key);
         contextUtil.updateTaskRecord(TaskType.MAP_TASK, key);
+    }
+
+    @Around("countTasks()")
+    public ResponseResult slowQueryCount(ProceedingJoinPoint joinPoint) throws Throwable {
+        //从方法签名的实参中取出key
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        String[] paramNames = methodSignature.getParameterNames();
+        int keyIndex = IntStream.range(0, paramNames.length)
+                .filter(i -> PARAM_NAME_OF_KEY.equals(paramNames[i])).findAny().getAsInt();
+        Object[] args = joinPoint.getArgs();
+        String key = (String) args[keyIndex];
+        Instant before = Instant.now();
+        ResponseResult responseResult = (ResponseResult) joinPoint.proceed();
+        Instant after = Instant.now();
+        Duration duration = Duration.between(before,after);
+        contextUtil.updateSlowQueryStatistic(key,duration);
+        return responseResult;
     }
 
 //    private void updateExpireStatistics(String key) {

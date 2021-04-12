@@ -75,9 +75,9 @@ public class PetrichorMonitorManager {
 
     public SlowQueryAnalysisSummary collectSlowQueryAnalysisInfo() {
         SlowQueryAnalysisSummary slowQueryAnalysisSummary = SlowQueryAnalysisSummary.builder()
-                .tasks(ImmutableList.of())
-                .runTimes(ImmutableList.of())
-                .timeCost(ImmutableList.of())
+                .tasks(slowQueryAnalysisVisitor.getKeys())
+                .runTimes(slowQueryAnalysisVisitor.getVisitTimes())
+                .timeCost(slowQueryAnalysisVisitor.getQueryTime())
                 .build();
         return slowQueryAnalysisSummary;
     }

@@ -9,7 +9,6 @@ import com.jalinyiel.petrichor.core.util.ContextUtil;
 import com.jalinyiel.petrichor.core.util.PetrichorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Optional;

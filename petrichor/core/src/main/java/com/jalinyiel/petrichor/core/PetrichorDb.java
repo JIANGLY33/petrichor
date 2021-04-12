@@ -4,6 +4,7 @@ import com.jalinyiel.petrichor.core.collect.PetrichorEntry;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.task.TaskType;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -28,11 +29,15 @@ public class PetrichorDb {
 
     private Map<TaskType, TreeMap<String, Long>> dataTypeTaskCount;
 
+    private Map<PetrichorObject, Duration> slowQueryStatistic;
+
     public final int HOT_SPOT_DATA_CAPACITY = 10;
 
     public final int EXPIRE_KEY_CAPACITY = 10;
 
     public final int TASK_COUNTS_CAPACITY = 10;
+
+    public final int SLOW_QUERY_CAPACITY = 8;
 
     public PetrichorDb(int id, PetrichorDict keyValues, ExpireDict expireKeys) {
         this.id = id;
@@ -42,6 +47,7 @@ public class PetrichorDb {
         this.hotSpotData = new ArrayList<>(HOT_SPOT_DATA_CAPACITY);
         this.expireData = new ArrayList<>(EXPIRE_KEY_CAPACITY);
         this.dataTypeTaskCount = new HashMap<>();
+        this.slowQueryStatistic = new HashMap<>(SLOW_QUERY_CAPACITY);
         dataTypeTaskCount.put(TaskType.LIST_TASK, new TreeMap<>(this::compare));
         dataTypeTaskCount.put(TaskType.STRING_TASK, new TreeMap<>(this::compare));
         dataTypeTaskCount.put(TaskType.MAP_TASK, new TreeMap<>(this::compare));
@@ -109,6 +115,14 @@ public class PetrichorDb {
 
     public void setExpireData(List<Map.Entry<PetrichorObject, PetrichorExpireInfo>> expireData) {
         this.expireData = expireData;
+    }
+
+    public Map<PetrichorObject, Duration> getSlowQueryStatistic() {
+        return slowQueryStatistic;
+    }
+
+    public void setSlowQueryStatistic(Map<PetrichorObject, Duration> slowQueryStatistic) {
+        this.slowQueryStatistic = slowQueryStatistic;
     }
 
     public List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> removeExpire() {

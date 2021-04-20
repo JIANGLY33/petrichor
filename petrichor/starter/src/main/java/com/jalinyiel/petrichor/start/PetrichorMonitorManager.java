@@ -64,11 +64,11 @@ public class PetrichorMonitorManager {
 
     public MemoryInfoSummary collectMemoryInfo() {
         MemoryInfoSummary memoryInfoSummary = MemoryInfoSummary.builder()
-                .setMemory(0)
-                .mapMemory(0)
-                .listMemory(0)
-                .stringMemory(0)
-                .sumMemoryCost(0)
+                .setMemory(memoryInfoVisitor.getSetMem())
+                .mapMemory(memoryInfoVisitor.getMapMem())
+                .listMemory(memoryInfoVisitor.getListMem())
+                .stringMemory(memoryInfoVisitor.getStringMem())
+                .sumMemoryCost(memoryInfoVisitor.getSumMem())
                 .build();
         return memoryInfoSummary;
     }

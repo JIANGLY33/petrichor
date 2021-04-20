@@ -2,7 +2,6 @@ package com.jalinyiel.petrichor.monitor;
 
 import com.jalinyiel.petrichor.core.PetrichorObject;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
-import com.jalinyiel.petrichor.core.collect.PetrichorValue;
 import com.jalinyiel.petrichor.core.util.ContextUtil;
 import org.apache.lucene.util.RamUsageEstimator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class HotSpotInfoVisitor {
         return hotSpotStatistics.stream().map(o -> {
             PetrichorString key = (PetrichorString) o.getPetrichorValue();
             Optional<PetrichorObject> petrichorValue = contextUtil.getValueIncludeExpire(key.getValue());
-            return petrichorValue.isPresent()?RamUsageEstimator.sizeOf(petrichorValue):0L;
+            return petrichorValue.isPresent()?RamUsageEstimator.sizeOf(petrichorValue.get()):0L;
         }).collect(Collectors.toList());
     }
 

@@ -197,4 +197,8 @@ public class ContextUtil<T> {
     public Map<PetrichorObject, Duration> getSlowQueryStatistic() {
         return petrichorContext.getCurrentDb().getSlowQueryStatistic();
     }
+
+    public Long getObjectMem(ObjectType objectType) {
+        return petrichorContext.getCurrentDb().getTaskMemory(objectType);
+    }
 }

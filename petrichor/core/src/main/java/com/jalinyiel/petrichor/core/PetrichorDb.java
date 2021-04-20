@@ -3,6 +3,7 @@ package com.jalinyiel.petrichor.core;
 import com.jalinyiel.petrichor.core.collect.PetrichorEntry;
 import com.jalinyiel.petrichor.core.collect.PetrichorString;
 import com.jalinyiel.petrichor.core.task.TaskType;
+import org.apache.lucene.util.RamUsageEstimator;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -125,16 +126,25 @@ public class PetrichorDb {
         this.slowQueryStatistic = slowQueryStatistic;
     }
 
+    /**
+     * 唯一对外暴露存储容器的场景
+     *
+     * @return
+     */
     public List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> removeExpire() {
         Map<PetrichorObject, PetrichorObject> keyValues = getKeyValues().getDict();
         Iterator<Map.Entry<PetrichorObject,PetrichorObject>> iterator = keyValues.entrySet().iterator();
         List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> res = new LinkedList<>();
+        Map<ObjectType,Long> dictSize = getKeyValues().getSizeDict();
         while(iterator.hasNext()) {
             Map.Entry<PetrichorObject,PetrichorObject> entry = iterator.next();
             PetrichorObject key = entry.getKey();
+            PetrichorObject value = entry.getValue();
             Optional<Long> expireTime = expireKeys.get(key);
             if (expireTime.isPresent() && expireTime.get() <= Instant.now().getEpochSecond()) {
+                long size = RamUsageEstimator.sizeOf(value);
                 res.add(new PetrichorEntry<>(key,new PetrichorExpireInfo(keyValues.get(key),expireTime.get())));
+                dictSize.put(value.getType(), dictSize.get(value.getType())-size);
                 iterator.remove();
                 expireKeys.remove(key);
             }
@@ -149,5 +159,9 @@ public class PetrichorDb {
         PetrichorObject q = PetrichorObjectFactory.of(ObjectType.PETRICHOR_STRING,ObjectEncoding.RAW_STRING, new PetrichorString("a"));
         Long l = h.get(q);
         System.out.println(q.equals(p));
+    }
+
+    public Long getTaskMemory(ObjectType objectType) {
+        return this.getKeyValues().getTypeSize(objectType);
     }
 }

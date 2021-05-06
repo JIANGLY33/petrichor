@@ -187,11 +187,12 @@ public class ContextUtil<T> {
         PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
         Map<PetrichorObject, Duration> slowQueryStatistic = petrichorDb.getSlowQueryStatistic();
         PetrichorObject petrichorObject = this.getKey(key);
+        slowQueryStatistic.put(petrichorObject,duration);
         if (petrichorDb.SLOW_QUERY_CAPACITY <= slowQueryStatistic.size()) {
             slowQueryStatistic = slowQueryStatistic.entrySet().stream().sorted(Comparator.comparing(entry -> entry.getValue().toMillis()))
                     .limit(petrichorDb.SLOW_QUERY_CAPACITY-1).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
-        slowQueryStatistic.put(petrichorObject,duration);
+        petrichorDb.setSlowQueryStatistic(slowQueryStatistic);
     }
 
     public Map<PetrichorObject, Duration> getSlowQueryStatistic() {

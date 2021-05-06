@@ -146,7 +146,7 @@ public class ListHandler extends PetrichorHandler implements ListOps {
         if(!optionalList.isPresent()){
             return ResponseResult.failedResult(CommonResultCode.TYPE_ERROR,"key type isn't list!");
         }
-        String elements = optionalList.get().trim(start, end).stream().collect(Collectors.joining());
+        String elements = optionalList.get().trim(start, end).stream().collect(Collectors.joining(","));
         return ResponseResult.successResult(CommonResultCode.SUCCESS, String.format("[%s]",elements));
     }
 

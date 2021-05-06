@@ -28,7 +28,8 @@ public class PetrichorList implements PetrichorValue {
     }
 
     public void insert(String v, int index) {
-        value.add(index, v);
+        if(index >= value.size())value.add(value.size()-1, v);
+        else value.add(index, v);
     }
 
     public Integer size() {
@@ -53,7 +54,7 @@ public class PetrichorList implements PetrichorValue {
 
     public List<String> trim(int start, int end) {
         end = end == -1 ? value.size() : end;
-        LinkedList<String> newList = (LinkedList<String>) value.stream().skip(start).limit(end - start).collect(Collectors.toList());
+        LinkedList<String> newList = new LinkedList(value.stream().skip(start).limit(end - start).collect(Collectors.toList()));
         value = newList;
         return newList;
     }

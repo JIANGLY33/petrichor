@@ -9,6 +9,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Order(0)
 @Aspect
 @Component
 @Slf4j
@@ -29,10 +31,6 @@ public class HandlerAspect {
 
     @Pointcut("@annotation(com.jalinyiel.petrichor.core.check.CheckKey)")
     public void requiredKeyFunc() {
-    }
-
-    @Pointcut("execution(* com.jalinyiel.petrichor.core.handler.*.*(..))&&execution(public * *(..))&&args(String, ..)")
-    public void countTasks() {
     }
 
     @Pointcut("execution(* com.jalinyiel.petrichor.core.handler.ListHandler.*(..))&&execution(public * *(..))&&args(String, ..)")
@@ -144,23 +142,6 @@ public class HandlerAspect {
         String key = (String) args[keyIndex];
         updateHotSpotStatistics(key);
         contextUtil.updateTaskRecord(TaskType.MAP_TASK, key);
-    }
-
-    @Around("countTasks()")
-    public ResponseResult slowQueryCount(ProceedingJoinPoint joinPoint) throws Throwable {
-        //从方法签名的实参中取出key
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        String[] paramNames = methodSignature.getParameterNames();
-        int keyIndex = IntStream.range(0, paramNames.length)
-                .filter(i -> PARAM_NAME_OF_KEY.equals(paramNames[i])).findAny().getAsInt();
-        Object[] args = joinPoint.getArgs();
-        String key = (String) args[keyIndex];
-        Instant before = Instant.now();
-        ResponseResult responseResult = (ResponseResult) joinPoint.proceed();
-        Instant after = Instant.now();
-        Duration duration = Duration.between(before,after);
-        contextUtil.updateSlowQueryStatistic(key,duration);
-        return responseResult;
     }
 
 //    private void updateExpireStatistics(String key) {

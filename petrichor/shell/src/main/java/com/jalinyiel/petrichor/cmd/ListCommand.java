@@ -89,8 +89,8 @@ public class ListCommand {
         @Parameters(index = "0", description = "key")
         private String key;
 
-        @Option(names = {"-b,-before"})
-        private boolean isBefore = true;
+        @Option(names = {"-b","--before"})
+        private boolean isBefore = false;
 
         @Parameters(index = "1", description = "value")
         private String value;

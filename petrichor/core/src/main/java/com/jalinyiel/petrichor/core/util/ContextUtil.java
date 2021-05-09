@@ -26,9 +26,9 @@ public class ContextUtil<T> {
         return petrichorList;
     }
 
-    public PetrichorObject getKey(String key) {
+    public Optional<PetrichorObject> getKey(String key) {
         PetrichorDict petrichorDict = getDataDict();
-        return petrichorDict.getKey(key).orElseThrow(KeyNotExistException::new);
+        return petrichorDict.getKey(key);
     }
 
     public boolean keyExist(String key) {
@@ -39,6 +39,11 @@ public class ContextUtil<T> {
     public PetrichorObject delete(String key) {
         PetrichorDict dict = getDataDict();
         return dict.delete(key);
+    }
+
+    public ObjectType type(String key) {
+        PetrichorObject petrichorObject = getDataDict().getByKey(key).get();
+        return petrichorObject.getType();
     }
 
     private PetrichorDict getDataDict() {
@@ -56,6 +61,11 @@ public class ContextUtil<T> {
     public long setExpire(PetrichorObject petrichorObject, long time) {
         ExpireDict expireDict = this.getExpireDict();
         return expireDict.put(petrichorObject, time);
+    }
+
+    public long setExpire(String key, long time) {
+        PetrichorObject petrichorObject = this.getDataDict().getKey(key).get();
+        return this.setExpire(petrichorObject,time);
     }
 
     public Optional<Long> getExpire(String key) {
@@ -97,8 +107,8 @@ public class ContextUtil<T> {
             ).collect(Collectors.toList());
             expireStatistics.remove(0);
         } else {
-            PetrichorObject petrichorKey = this.getKey(key);
-            Map.Entry<PetrichorObject,PetrichorExpireInfo> e = new PetrichorEntry<>(petrichorKey,
+            Optional<PetrichorObject> petrichorKey = this.getKey(key);
+            Map.Entry<PetrichorObject,PetrichorExpireInfo> e = new PetrichorEntry<>(petrichorKey.get(),
                     new PetrichorExpireInfo(this.getValue(key),Instant.now().getEpochSecond()));
             expireStatistics.add(e);
         }
@@ -186,8 +196,9 @@ public class ContextUtil<T> {
     public void updateSlowQueryStatistic(String key, Duration duration) {
         PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
         Map<PetrichorObject, Duration> slowQueryStatistic = petrichorDb.getSlowQueryStatistic();
-        PetrichorObject petrichorObject = this.getKey(key);
-        slowQueryStatistic.put(petrichorObject,duration);
+        Optional<PetrichorObject> petrichorObject = this.getKey(key);
+        if (petrichorObject.isPresent() == false)return;
+        slowQueryStatistic.put(petrichorObject.get(),duration);
         if (petrichorDb.SLOW_QUERY_CAPACITY <= slowQueryStatistic.size()) {
             slowQueryStatistic = slowQueryStatistic.entrySet().stream().sorted(Comparator.comparing(entry -> entry.getValue().toMillis()))
                     .limit(petrichorDb.SLOW_QUERY_CAPACITY-1).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

@@ -32,20 +32,19 @@ public class GlobalHandler extends PetrichorHandler implements GlobalOps {
     @Override
     @CheckKey
     public ResponseResult<Boolean> exist(String key) {
-        return null;
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, contextUtil.keyExist(key));
     }
 
     @Override
     @CheckKey
     public ResponseResult<Long> expire(String key, long seconds) {
-
-        return null;
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, contextUtil.setExpire(key,seconds));
     }
 
     @Override
     @CheckKey
-    public ResponseResult<ObjectEncoding> type(String key) {
-        return null;
+    public ResponseResult<String> type(String key) {
+        return ResponseResult.successResult(CommonResultCode.SUCCESS, contextUtil.type(key).getName());
     }
 
     @Override

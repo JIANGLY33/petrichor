@@ -155,8 +155,8 @@ public class HandlerAspect {
 
     private void updateHotSpotStatistics(String key) {
         List<PetrichorObject> hotSpotStatistics = contextUtil.getHotSpotData();
-        PetrichorObject keyObject = contextUtil.getKey(key);
-        hotSpotStatistics.add(keyObject);
+        Optional<PetrichorObject> keyObject = contextUtil.getKey(key);
+        hotSpotStatistics.add(keyObject.get());
         if(hotSpotStatistics.size() >= contextUtil.getExpireCapacity()) {
            hotSpotStatistics = hotSpotStatistics.stream().sorted(this::compareHotSpotData)
                     .limit(contextUtil.getHotSpotCapacity()).collect(Collectors.toList());

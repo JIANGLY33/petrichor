@@ -133,20 +133,22 @@ public class PetrichorDb {
      */
     public List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> removeExpire() {
         Map<PetrichorObject, PetrichorObject> keyValues = getKeyValues().getDict();
-        Iterator<Map.Entry<PetrichorObject,PetrichorObject>> iterator = keyValues.entrySet().iterator();
+        Map<PetrichorObject,Long> expireDict = this.getExpireKeys().getDict();
+        Iterator<Map.Entry<PetrichorObject,Long>> iterator = expireDict.entrySet().iterator();
+//        Iterator<Map.Entry<PetrichorObject,PetrichorObject>> iterator = keyValues.entrySet().iterator();
         List<Map.Entry<PetrichorObject,PetrichorExpireInfo>> res = new LinkedList<>();
         Map<ObjectType,Long> dictSize = getKeyValues().getSizeDict();
         while(iterator.hasNext()) {
-            Map.Entry<PetrichorObject,PetrichorObject> entry = iterator.next();
+            Map.Entry<PetrichorObject,Long> entry = iterator.next();
             PetrichorObject key = entry.getKey();
-            PetrichorObject value = entry.getValue();
-            Optional<Long> expireTime = expireKeys.get(key);
-            if (expireTime.isPresent() && expireTime.get() <= Instant.now().getEpochSecond()) {
+            Long expireTime = entry.getValue();
+            if (expireTime <= Instant.now().getEpochSecond()) {
+                PetrichorObject value = keyValues.get(key);
                 long size = RamUsageEstimator.sizeOf(value);
-                res.add(new PetrichorEntry<>(key,new PetrichorExpireInfo(keyValues.get(key),expireTime.get())));
+                res.add(new PetrichorEntry<>(key,new PetrichorExpireInfo(keyValues.get(key),expireTime)));
                 dictSize.put(value.getType(), dictSize.get(value.getType())-size);
                 iterator.remove();
-                expireKeys.remove(key);
+                keyValues.remove(key);
             }
         }
         return res;

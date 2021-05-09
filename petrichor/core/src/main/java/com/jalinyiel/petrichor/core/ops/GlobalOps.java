@@ -1,6 +1,5 @@
 package com.jalinyiel.petrichor.core.ops;
 
-import com.jalinyiel.petrichor.core.ObjectEncoding;
 import com.jalinyiel.petrichor.core.ResponseResult;
 
 public interface GlobalOps {
@@ -50,5 +49,5 @@ public interface GlobalOps {
      * @param key
      * @return
      */
-    ResponseResult<ObjectEncoding> type(String key);
+    ResponseResult<String> type(String key);
 }

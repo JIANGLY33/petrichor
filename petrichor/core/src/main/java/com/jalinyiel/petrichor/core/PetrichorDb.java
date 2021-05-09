@@ -40,6 +40,8 @@ public class PetrichorDb {
 
     public final int SLOW_QUERY_CAPACITY = 8;
 
+    public final long SLOW_QUERY_LIMIT = 1000;
+
     public PetrichorDb(int id, PetrichorDict keyValues, ExpireDict expireKeys) {
         this.id = id;
         this.keyValues = keyValues;

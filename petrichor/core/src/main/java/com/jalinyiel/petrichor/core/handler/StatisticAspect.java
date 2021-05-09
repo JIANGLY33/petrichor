@@ -50,7 +50,8 @@ public class StatisticAspect {
         ResponseResult responseResult = (ResponseResult) joinPoint.proceed();
         Instant after = Instant.now();
         Duration duration = Duration.between(before,after);
-        contextUtil.updateSlowQueryStatistic(key,duration);
+        if(duration.toMillis() > contextUtil.getSlowQueryLimit())
+            contextUtil.updateSlowQueryStatistic(key,duration);
         return responseResult;
     }
 }

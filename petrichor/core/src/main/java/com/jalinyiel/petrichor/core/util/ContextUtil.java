@@ -193,6 +193,10 @@ public class ContextUtil<T> {
         return Optional.empty();
     }
 
+    public long getSlowQueryLimit() {
+        return petrichorContext.getCurrentDb().SLOW_QUERY_LIMIT;
+    }
+
     public void updateSlowQueryStatistic(String key, Duration duration) {
         PetrichorDb petrichorDb = petrichorContext.getCurrentDb();
         Map<PetrichorObject, Duration> slowQueryStatistic = petrichorDb.getSlowQueryStatistic();
